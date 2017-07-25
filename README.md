@@ -66,18 +66,19 @@ console.log(stringify(data))
 
 ## Supported types
 
-* string
-* number
-* boolean
-* function
-* Object
-* Array
-* Date
-* RegExp
-* null
-* Infinity
-* NaN
-* undefined
+
+* ``String``
+* ``Number``
+* ``Boolean``
+* ``function``
+* ``Object``
+* ``Array``
+* ``Date``
+* ``RegExp``
+* ``null``
+* ``Infinity``
+* ``NaN``
+* ``undefined``
 * not-yet-defined using ``stringify.deferred``
 
 ## API docs
