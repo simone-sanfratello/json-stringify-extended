@@ -2,8 +2,10 @@
 
 [![NPM Version](http://img.shields.io/npm/v/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![NPM Downloads](https://img.shields.io/npm/dm/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
-
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
+[![NPM](https://nodei.co/npm-dl/json-stringify-extended.png)](https://nodei.co/npm/json-stringify-extended/)
+
 
 JSON.stringify with extended data types support - and some options
 
@@ -76,7 +78,7 @@ console.log(stringify(data))
 * Infinity
 * NaN
 * undefined
-* not-yet-defined using ``stringify.defered``
+* not-yet-defined using ``stringify.deferred``
 
 ## API docs
 
