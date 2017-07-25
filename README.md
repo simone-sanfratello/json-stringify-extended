@@ -5,9 +5,65 @@
 
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-JSON.stringify with extended data types support
+JSON.stringify with extended data types support - and some options
 
-types:
+## Purpose
+
+I just need to stringify not only in JSON format, but also in JavaScript Object, including with functions and undefined types like enums.
+
+## Installing
+
+````bash
+$ npm i json-stringify-extended
+````
+
+### Quick start
+
+```js
+const stringify = require('json-stringify-extended')
+
+const data = {a: 'basic set, default options',
+    b: 1,
+    c: true,
+    d: function (a, b) { console.log(a + b) },
+    e: {a: 0, b: 0.1, c: -2},
+    f: ['a', 'b', 'c'],
+    g: new Date('2017-01-01'),
+    h: /a|b/,
+    i: null,
+    j: Infinity,
+    k: NaN,
+    l: undefined,
+    m: stringify.deferred('my.enum.VALUE')
+}
+
+console.log(stringify(data))
+
+// output
+{
+  a:"basic set, default options",
+  b:1,
+  c:true,
+  d:function (a, b) { console.log(a + b) },
+  e:{
+    a:0,
+    b:0.1,
+    c:-2
+  },
+  f:["a","b","c"],
+  g:new Date("2017-01-01T00:00:00.000Z"),
+  h:/a|b/,
+  i:null,
+  j:Infinity,
+  k:NaN,
+  l:undefined,
+  m:my.enum.VALUE
+}
+
+```
+
+## Supported types
+
 * string
 * number
 * boolean
@@ -20,72 +76,65 @@ types:
 * Infinity
 * NaN
 * undefined
+* not-yet-defined using ``stringify.defered``
 
-You can also use not yet defined vars using ``stringify.defered``.
+## API docs
 
-## Install
+### stringify(data[, options])
 
-````bash
-npm install json-stringify-extended
-````
+Stringify data into string
 
-## Example
+#### data
+Type: any
 
-```js
-const stringify = require('json-stringify-extended')
+#### options
+Type: `Object`
 
-console.log(stringify(_test, options))
-```
+Options to adjust result format
 
-## Options
+##### options.endline
+Type: `String`
+Default: `\n`
 
-options.spacing
-default '  ' (two spaces)
+Endline string, should be only spacing chars as `\n` or `\r\n`. Set to empty string `''` for one line output.
 
-options.endline
-default '\n'
+##### options.spacing
+Type: `String`
+Default: `  ` (two spaces)
 
-options.prepend
-default null
-examples 'const foo ='
+Indentation string, should contains only spacing chars as `\t` or spaces ` `.
 
-options.postpend
-default null
-examples ';\nmodule.exports=foo;'
+##### options.keyQuote
+Type: `String`
+Default: `null`
 
-options.quote
-default null
-' or "
+Character used for quote keys, default is `null`, means no quotes in keys. Should be `"` or `'` or `null`
 
-options.keepUndefined
-default false
+##### options.valueQuote
+Type: `String`
+Default: `'`
 
-options.filter
-default null
-function(prop, value)
+Character used for quote values, default is `'`. Should be `"` or `'`
 
-options.replace
-default null
-function(prop, value)
-example password
+##### options.keySpace
+Type: `Boolean`
+Default: `false`
 
-options.sort sort keys
-default false
+Add a space beetwen `key:` and `value`.
 
-options.compress
-default false
-compress function body
+---
 
-options.safe
-default false
-if true, replace circular error with [Circular] and won't throw exception
+## TODO
 
-
-@see 
-https://www.npmjs.com/package/stringify-object
-https://www.npmjs.com/package/json-stable-stringify
-https://www.npmjs.com/package/jsesc
-
+- support Buffer, File
+- options.keepUndefined
+- options.compress
+  compress function body
+- filter function
+- replace function
+- sort keys
+- safe - do not throw exception if find circularity
+- prepared options: json, standard-js
 
 ## License
 

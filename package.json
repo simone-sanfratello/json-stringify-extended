@@ -1,0 +1,27 @@
+{
+  "name": "json-stringify-extended",
+  "version": "0.1.0",
+  "description": "JSON.stringify with extended data types support",
+  "main": "main.js",
+  "engines": {
+    "node": ">= 4.x"
+  },
+  "devDependencies": {
+    "standard": "^x",
+    "tap": "^x"
+  },
+  "scripts": {
+    "test": "standard && tap test/*",
+    "test-cov": "standard && tap test/* --cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://simone-sanfratello@github.com/braceslab/json-stringify-extended.git"
+  },
+  "keywords": [
+    "json",
+    "stringify"
+  ],
+  "author": "Simone Sanfratello <simone@braceslab.com>",
+  "license": "MIT"
+}
