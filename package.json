@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "JSON.stringify with extended data types support",
   "main": "main.js",
   "engines": {
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "standard && tap test/*",
-    "test-cov": "standard && tap test/* --cov"
+    "test-cov": "standard main.js && tap test/* --cov"
   },
   "repository": {
     "type": "git",

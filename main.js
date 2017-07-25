@@ -1,11 +1,12 @@
 /**
  *
  * @param {*} data
- * @param {string} options.endline end line with, default '\n'
- * @param {string} options.spacing indentation string, default '  ' (two spaces)
- * @param {string} options.keyQuote character used for quote keys, default null - no quotes
- * @param {string} options.valueQuote character used for quote values, default "
- * @param {boolean} options.keySpace add space after key: , default false
+ * @param {Boolean} options.safe works in safe mode, so will not throws exception for circularity; default false
+ * @param {String} options.endline end line with; default '\n'
+ * @param {String} options.spacing indentation string; default '  ' (two spaces)
+ * @param {String} options.keyQuote character used for quote keys; default null - no quotes
+ * @param {String} options.valueQuote character used for quote values; default "
+ * @param {Boolean} options.keySpace add space after key: ; default false
  */
 const stringify = function (data, options) {
   var __done = []
@@ -18,12 +19,12 @@ const stringify = function (data, options) {
         spacing: '  ',
         keyQuote: null,
         keySpace: false,
-        valueQuote: '"'
+        valueQuote: '"',
+        safe: false
       // @todo compress: false,
       // @todo filter: null,
       // @todo replace: null,
       // @todo sort: false,
-      // @todo safe: false
       }
       return
     }
@@ -46,13 +47,15 @@ const stringify = function (data, options) {
     return str.split(find).join(replace)
   }
 
-  const __checkCircular = function (val, path) {
-    // @todo if options.safe
+  const __circularity = function (val, path) {
     if (__done.indexOf(val) !== -1) {
-      throw new Error('ERROR: circular reference @ ' + path)
+      if (!options.safe) {
+        throw new Error('Circular reference @ ' + path)
+      }
+      return true
     }
-
     __done.push(val)
+    return false
   }
 
   const __serialize = {
@@ -81,9 +84,13 @@ const stringify = function (data, options) {
       if (!path) {
         path = '[Object]'
       }
-      __checkCircular(obj, path)
+
       const _spacing0 = __spacing(deep)
       const _spacing1 = _spacing0 + options.spacing
+
+      if (__circularity(obj, path)) {
+        return options.endline + _spacing1 + '[Circularity]' + options.endline + _spacing0
+      }
 
       const _out = []
       for (const key in obj) {
@@ -100,7 +107,10 @@ const stringify = function (data, options) {
       if (!path) {
         path = '[Array]'
       }
-      __checkCircular(obj, path)
+
+      if (__circularity(obj, path)) {
+        return '[Circularity]'
+      }
 
       const _out = []
       for (let i = 0; i < obj.length; i++) {
@@ -126,9 +136,6 @@ const stringify = function (data, options) {
   }
 
   const __quote = function (value, quote) {
-    if (!quote) {
-      return value
-    }
     return quote + __replace(value, quote, '\\' + quote) + quote
   }
 
@@ -157,6 +164,7 @@ const stringify = function (data, options) {
   return __main(data)
 }
 
+// deferred type
 stringify.deferred = function (val) {
   this.val = val
   return new stringify._deferred(val)
@@ -170,9 +178,16 @@ stringify._deferred.prototype.toString = function () {
   return this.val
 }
 
+// packed options
 stringify.options = {
-  json: { },
-  module: { }
+  json: {
+    keyQuote: '"',
+    keySpace: true
+  },
+  standardjs: {
+    keySpace: true,
+    valueQuote: "'"
+  }
 }
 
 if (typeof module !== 'undefined' && module.exports) {

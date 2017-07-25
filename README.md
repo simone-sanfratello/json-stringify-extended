@@ -95,6 +95,12 @@ Type: `Object`
 
 Options to adjust result format
 
+##### options.safe
+Type: `Boolean`
+Default: `false`
+
+Works in safe mode, so will not throws exception for circularity.
+
 ##### options.endline
 Type: `String`
 Default: `\n`
@@ -136,7 +142,6 @@ Add a space beetwen `key:` and `value`.
 - filter function
 - replace function
 - sort keys
-- safe - do not throw exception if find circularity
 - prepared options: json, standard-js
 
 ## License

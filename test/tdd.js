@@ -1,9 +1,10 @@
 const tap = require('tap')
 const stringify = require('../main')
 
-tap.test('stringify - basic set, default options', (test) => {
+tap.test('stringify - basic data set, default options', (test) => {
   test.plan(1)
-  const data = {a: 'basic set, default options',
+  const data = {
+    a: 'lorem ipsum',
     b: 1,
     c: true,
     d: function (a, b) { console.log(a + b) },
@@ -17,7 +18,7 @@ tap.test('stringify - basic set, default options', (test) => {
     l: undefined
   }
   const result = `{
-  a:"basic set, default options",
+  a:"lorem ipsum",
   b:1,
   c:true,
   d:function (a, b) { console.log(a + b) },
@@ -34,13 +35,13 @@ tap.test('stringify - basic set, default options', (test) => {
   k:NaN,
   l:undefined
 }`
-  // console.log(stringify(data))
   test.equal(stringify(data), result)
 })
 
-tap.test('stringify - basic set, custom options', (test) => {
+tap.test('stringify - basic data set, custom options', (test) => {
   test.plan(1)
-  const data = {a: 'basic set, custom options',
+  const data = {
+    a: 'lorem ipsum',
     b: 1,
     c: true,
     d: function (a, b) { console.log(a + b) },
@@ -58,7 +59,7 @@ tap.test('stringify - basic set, custom options', (test) => {
     keySpace: true
   }
   const result = `{
-  a: 'basic set, custom options',
+  a: 'lorem ipsum',
   b: 1,
   c: true,
   d: function (a, b) { console.log(a + b) },
@@ -83,117 +84,65 @@ tap.test('stringify - deferred type', (test) => {
   const data = {a: stringify.deferred('my.enum.VALUE')}
   const options = {spacing: '', endline: ''}
   const result = `{a:my.enum.VALUE}`
-  console.log(stringify(data, options))
   test.equal(stringify(data, options), result)
 })
 
-/*
-var _test = {
-  adefered: stringify.defered('my.Custom.ENUM'), // my.Custom.ENUM is not yet defined
-  astring: 'katia',
-  anarray: [1, 'alice', 'rico', 'mimi', 2, 3, new Date()],
-  aquoting: 'hi "mr ',
-  abool: true,
-  anotherbool: false,
-  anundefined: undefined,
-  anull: null,
-  anan: NaN,
-  ainfinity: Infinity,
-  aclass: {
-    afunction: function () { return 'hi' },
-    afloat: 7.8
-  },
-  aregexp: /(\w)+/,
-  atree: {
-    one: 1,
-    two: 'two',
-    three: {
-      threeone: {
-        1: '3.1'
-      }
+tap.test('stringify - unsafe circularity in object', (test) => {
+  test.plan(1)
+  const data = {a: {b: {c: 0}}}
+  data.a.b.d = data.a
+  test.throw(() => { stringify(data) })
+})
+
+tap.test('stringify - unsafe circularity in array', (test) => {
+  test.plan(1)
+  const data = [0, {}, 2, {}]
+  data[3].a = data[1]
+  test.throw(() => { stringify(data) })
+})
+
+tap.test('stringify - safe circularity in object', (test) => {
+  test.plan(1)
+  const data = {a: {b: {c: 0}}}
+  data.a.b.d = data.a
+  const result = `{a:{b:{c:0,d:[Circularity]}}}`
+
+  const options = {safe: true, endline: '', spacing: ''}
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - safe circularity in array', (test) => {
+  test.plan(1)
+  const data = [0, [], 2, []]
+  data[3][0] = data[1]
+  const result = `[0,[],2,[[Circularity]]]`
+
+  const options = {safe: true, endline: '', spacing: ''}
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - bad data set, default options', (test) => {
+  test.plan(1)
+  const data = {
+    'quoted"key': 'quoted"value',
+    "dquoted'key": "dquoted'value",
+    'bad key -_"\' .£$,': '???',
+    'multiline function': function (a, b) {
+      console.log(a + b)
+      return true
     },
-    four: 4.01,
-    five: 5
-  },
-  '1astrangekey': 123,
-  'strange-key_two': 0,
-  normal_key: -1,
-  'awful key ': 'a',
-  'dotted.key.com': 'www',
-  'very".awsul.key': '123',
-  "why use a string for a key? 'cause I can ...": '?\'"'
-}
-
-// var jsfy = require('./main')
-var jsfy = require('jsfy')
-
-var _test = {
-  astring: 'katia',
-  anarray: [1, 'alice', 'rico', 'mimi', 2, 3, new Date()],
-  aquoting: 'hi "mr ',
-  abool: true,
-  anotherbool: false,
-  anundefined: undefined,
-  anull: null,
-  amath: function (x, y) {
-    return Math.min(x, y)
-  },
-  anan: NaN,
-  ainfinity: Infinity,
-  aclass: {
-    afunction: function () {
-      return 'hi'
-    },
-    afloat: 7.8
-  },
-  aregexp: /(\w)+/,
-  atree: {
-    one: 1,
-    two: 'two',
-    three: {
-      threeone: {
-        1: '3.1'
-      }
-    },
-    four: 4.01,
-    five: 5
-  },
-  '1astrangekey': 123,
-  'strange-key_two': 0,
-  normal_key: -1,
-  'awful key ': 'a',
-  'dotted.key.com': 'www',
-  'very".awsul.key': '123',
-  "why use a string for a key? 'cause I can ...": '?\'"',
-  adefered: new jsfy.Defered('my.Custom.ENUM')
-}
-
-// output tests
-console.log(jsfy(_test, 2, '\n'))
-console.log(jsfy(_test, '  ', null, 'data'))
-
-// circular reference object
-var _circle = {
-  a: {
-    b: {
-      c: 1
-    }
+    mixed_array: ['a', -1, null, undefined, new Date('2016-12-31')]
   }
-}
-_circle.a.b.d = _circle.a
-try {
-  console.log(jsfy(_circle))
-} catch (err) {
-  console.log(err)
-}
 
-// circular reference array
-var _array = [0, {}, 2, {}]
-_array[3].a = _array[1]
-try {
-  console.log(jsfy(_array))
-} catch (err) {
-  console.log(err)
-}
-
-*/
+  const result = `{
+  "quoted\\"key":"quoted\\"value",
+  "dquoted'key":"dquoted'value",
+  "bad key -_\\"' .£$,":"???",
+  "multiline function":function (a, b) {
+      console.log(a + b)
+      return true
+    },
+  mixed_array:["a",-1,null,undefined,new Date("2016-12-31T00:00:00.000Z")]
+}`
+  test.equal(stringify(data), result)
+})
