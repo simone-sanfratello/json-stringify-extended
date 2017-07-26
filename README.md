@@ -7,16 +7,20 @@
 [![NPM](https://nodei.co/npm-dl/json-stringify-extended.png)](https://nodei.co/npm/json-stringify-extended/)
 
 
-JSON.stringify with extended data types support - and some options
+JSON.stringify with extended data types support (such ``function`` type) and some options
 
 ## Purpose
 
-I just need to stringify not only in JSON format, but also in JavaScript Object, including with functions and undefined types like enums.
+- Stringify more than primitive types into JSON format
+- Stringify in JavaScript Object
+- Use not yet defined types (as enums)
+- Avoid useless quotes
+- Manage circularity
 
 ## Installing
 
 ````bash
-$ npm i json-stringify-extended
+npm i json-stringify-extended
 ````
 
 ### Quick start
@@ -24,19 +28,20 @@ $ npm i json-stringify-extended
 ```js
 const stringify = require('json-stringify-extended')
 
-const data = {a: 'basic set, default options',
-    b: 1,
-    c: true,
-    d: function (a, b) { console.log(a + b) },
-    e: {a: 0, b: 0.1, c: -2},
-    f: ['a', 'b', 'c'],
-    g: new Date('2017-01-01'),
-    h: /a|b/,
-    i: null,
-    j: Infinity,
-    k: NaN,
-    l: undefined,
-    m: stringify.deferred('my.enum.VALUE')
+const data = {
+  a: 'basic set, default options',
+  b: 1,
+  c: true,
+  d: function (a, b) { console.log(a + b) },
+  e: {a: 0, b: 0.1, c: -2},
+  f: ['a', 'b', 'c'],
+  g: new Date('2017-01-01'),
+  h: /a|b/,
+  i: null,
+  j: Infinity,
+  k: NaN,
+  l: undefined,
+  m: stringify.deferred('my.enum.VALUE')
 }
 
 console.log(stringify(data))
@@ -88,7 +93,7 @@ console.log(stringify(data))
 Stringify data into string
 
 #### data
-Type: any
+Type: ``any``
 
 #### options
 Type: `Object`
@@ -96,37 +101,37 @@ Type: `Object`
 Options to adjust result format
 
 ##### options.safe
-Type: `Boolean`
+Type: `Boolean`  
 Default: `false`
 
 Works in safe mode, so will not throws exception for circularity.
 
 ##### options.endline
-Type: `String`
+Type: `String`  
 Default: `\n`
 
 Endline string, should be only spacing chars as `\n` or `\r\n`. Set to empty string `''` for one line output.
 
 ##### options.spacing
-Type: `String`
+Type: `String`  
 Default: `  ` (two spaces)
 
 Indentation string, should contains only spacing chars as `\t` or spaces ` `.
 
 ##### options.keyQuote
-Type: `String`
+Type: `String`  
 Default: `null`
 
 Character used for quote keys, default is `null`, means no quotes in keys. Should be `"` or `'` or `null`
 
 ##### options.valueQuote
-Type: `String`
+Type: `String`  
 Default: `'`
 
 Character used for quote values, default is `'`. Should be `"` or `'`
 
 ##### options.keySpace
-Type: `Boolean`
+Type: `Boolean`  
 Default: `false`
 
 Add a space beetwen `key:` and `value`.
@@ -142,13 +147,13 @@ Add a space beetwen `key:` and `value`.
 - filter function
 - replace function
 - sort keys
-- prepared options: json, standard-js
+- prepared options: json, standard-js, compact
 
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2017 braceslab
+Copyright (c) 2017 [braces lab](https://braceslab.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
