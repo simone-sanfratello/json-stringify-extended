@@ -4,18 +4,15 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-[![NPM](https://nodei.co/npm-dl/json-stringify-extended.png)](https://nodei.co/npm/json-stringify-extended/)
-
-
 JSON.stringify with extended data types support (such ``function`` type) and some options
 
 ## Purpose
 
 - Stringify more than primitive types into JSON format
 - Stringify in JavaScript Object
-- Use not yet defined types (as enums)
+- Use not yet defined types (like enums)
 - Avoid useless quotes
-- Manage circularity
+- Throw exception or not in circularity references
 
 ## Installing
 
@@ -142,6 +139,7 @@ Add a space beetwen `key:` and `value`.
 
 - support Buffer, File
 - options.keepUndefined
+- options.compact
 - options.compress
   compress function body
 - filter function

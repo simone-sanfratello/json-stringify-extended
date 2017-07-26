@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "JSON.stringify with extended data types support",
   "main": "main.js",
   "engines": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://simone-sanfratello@github.com/braceslab/json-stringify-extended.git"
+    "url": "git+https://github.com/braceslab/json-stringify-extended.git"
   },
   "keywords": [
     "json",
