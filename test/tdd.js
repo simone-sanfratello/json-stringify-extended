@@ -155,6 +155,44 @@ tap.test('stringify - using prepared options.compact', (test) => {
   test.plan(1)
   const data = {a: 'string', b: false, c: [0, 1, 2]}
   const result = `{a:'string',b:false,c:[0,1,2]}`
-  console.log(stringify(data, stringify.options.compact))
   test.equal(stringify(data, stringify.options.compact), result)
+})
+
+tap.test('stringify - use options.replace', (test) => {
+  test.plan(1)
+  const data = {
+    user: 'alice',
+    password: 'it-s-a-secret',
+    id: 1,
+    meta: ['1', 1]
+  }
+  const options = {
+    replace: function (key, value) {
+      if (key === 'password') {
+        return {key: 'secret', value: '***'}
+      }
+      if (value === 1) {
+        return {key, value: 'one'}
+      }
+      return {key, value}
+    }
+  }
+  const result = `{
+  user:"alice",
+  secret:"***",
+  id:"one",
+  meta:["1","one"]
+}`
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - use options.replace not a function', (test) => {
+  test.plan(1)
+  const data = {user: 'alice'}
+  const options = {
+    replace: 0
+  }
+  test.throw(() => {
+    stringify(data, options)
+  })
 })

@@ -89,7 +89,7 @@ console.log(stringify(data))
 Stringify data into string
 
 #### data
-Type: ``any``
+Type: `any`
 
 #### options
 Type: `Object`
@@ -149,19 +149,52 @@ Default: `false`
 
 Add a space beetwen `key:` and `value`.
 
+##### options.replace
+Type: `function(key:String, value:String) {key, value}`  
+Default: `null`
+
+Use function to replace ``value`` and/or ``key`` of each element.  
+Must return an object ``{key, value}``.  
+
+**example**
+````js
+const data = {
+  user: 'alice',
+  password: 'it-s-a-secret',
+  id: 1,
+  meta: ['1', 1]
+}
+const options = {
+  replace: function (key, value) {
+    if (key === 'password') {
+      return {key: 'secret', value: '***'}
+    }
+    if (value === 1) {
+      return {key, value: 'one'}
+    }
+    return {key, value}
+  }
+}
+console.log(stringify(data, options))
+// output
+{
+  user:"alice",
+  secret:"***",
+  id:"one",
+  meta:["1","one"]
+}
+````
+
 ---
 
 ## TODO
 
 - support Buffer, File
-- options.keepUndefined
-- options.compact
+- options.discardUndefined
 - options.compress
-  compress function body
+  compress data: function body, date value
 - filter function
-- replace function
 - sort keys
-- prepared options: json, standard-js, compact
 
 ## License
 

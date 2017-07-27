@@ -7,9 +7,11 @@
  * @param {String} options.keyQuote character used for quote keys; default null - no quotes
  * @param {String} options.valueQuote character used for quote values; default "
  * @param {Boolean} options.keySpace add space after key: ; default false
+ * @param {function(key:String, value:*)} options.replace replace data by key or value
  */
 const stringify = function (data, options) {
-  var __done = []
+  let __done = []
+  let __keySpace
 
   const __options = function () {
     if (!options) {
@@ -20,24 +22,28 @@ const stringify = function (data, options) {
         keyQuote: null,
         keySpace: false,
         valueQuote: '"',
-        safe: false
+        safe: false,
+        replace: null
       // @todo compress: false,
       // @todo filter: null,
-      // @todo replace: null,
       // @todo sort: false,
       }
-      return
+    } else {
+      if (!options.endline && options.endline !== '') {
+        options.endline = '\n'
+      }
+      if (!options.spacing && options.spacing !== '') {
+        options.spacing = '  '
+      }
+      if (!options.valueQuote) {
+        options.valueQuote = '"'
+      }
+      if (options.replace !== undefined && typeof options.replace !== 'function') {
+        throw new Error('options.replace is not a function')
+      }
     }
 
-    if (!options.endline && options.endline !== '') {
-      options.endline = '\n'
-    }
-    if (!options.spacing && options.spacing !== '') {
-      options.spacing = '  '
-    }
-    if (!options.valueQuote) {
-      options.valueQuote = '"'
-    }
+    __keySpace = options.keySpace ? ' ' : ''
   }
 
   const __replace = function (str, find, replace) {
@@ -94,32 +100,35 @@ const stringify = function (data, options) {
 
       const _out = []
       for (const key in obj) {
-        // wrap strange key with quotes
-        let _key = key.match(/^\w[\d\w_]*$/)
-          ? key
-          : __quote(key, options.keyQuote || '"')
         let _path = path + '.' + key
-        _out.push(options.endline + _spacing1 + _key + ':' + (options.keySpace ? ' ' : '') + __main(obj[key], deep + 1, _path))
+        const _item = __main(key, obj[key], deep + 1, _path)
+
+        // wrap strange key with quotes
+        if (_item.key && !_item.key.match(/^\w[\d\w_]*$/)) {
+          _item.key = __quote(key, options.keyQuote || '"')
+        }
+        _out.push(options.endline + _spacing1 + _item.key + ':' + __keySpace + _item.value)
       }
       return '{' + _out.join(',') + options.endline + _spacing0 + '}'
     },
-    array: function (obj, deep, path) {
+    array: function (array, deep, path) {
       if (!path) {
         path = '[Array]'
       }
 
-      if (__circularity(obj, path)) {
+      if (__circularity(array, path)) {
         return '[Circularity]'
       }
 
       const _out = []
-      for (let i = 0; i < obj.length; i++) {
-        let _path = path + '#' + i
-        _out.push(__main(obj[i], deep, _path))
+      for (let i = 0; i < array.length; i++) {
+        const _path = path + '#' + i
+        _out.push(__main(null, array[i], deep, _path).value)
       }
       return '[' + _out.join(',') + ']'
     },
     date: function (obj) {
+      // @todo if compact obj.getTime
       return 'new Date(' + options.valueQuote + obj.toISOString() + options.valueQuote + ')'
     },
     regexp: function (obj) {
@@ -139,29 +148,33 @@ const stringify = function (data, options) {
     return quote + __replace(value, quote, '\\' + quote) + quote
   }
 
-  const __main = function (obj, deep, path) {
+  const __main = function (key, value, deep, path) {
     if (!deep) deep = 1
 
-    let _type = typeof obj
+    if (options.replace) {
+      ({key, value} = options.replace(key, value))
+    }
+
+    let _type = typeof value
     if (_type === 'object') {
-      if (obj instanceof Array) {
+      if (value instanceof Array) {
         _type = 'array'
-      } else if (obj instanceof Date) {
+      } else if (value instanceof Date) {
         _type = 'date'
-      } else if (obj instanceof RegExp) {
+      } else if (value instanceof RegExp) {
         _type = 'regexp'
-      } else if (obj instanceof stringify._deferred) {
+      } else if (value instanceof stringify._deferred) {
         _type = 'deferred'
-      } else if (obj === null) {
+      } else if (value === null) {
         _type = 'null'
       }
     }
 
-    return __serialize[_type](obj, deep, path)
+    return {key, value: __serialize[_type](value, deep, path)}
   }
 
   __options()
-  return __main(data)
+  return __main(null, data).value
 }
 
 // deferred type
