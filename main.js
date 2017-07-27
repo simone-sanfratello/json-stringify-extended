@@ -178,7 +178,7 @@ stringify._deferred.prototype.toString = function () {
   return this.val
 }
 
-// packed options
+// prepared options
 stringify.options = {
   json: {
     keyQuote: '"',
@@ -187,6 +187,11 @@ stringify.options = {
   standardjs: {
     keySpace: true,
     valueQuote: "'"
+  },
+  compact: {
+    valueQuote: "'",
+    endline: '',
+    spacing: ''
   }
 }
 

@@ -68,7 +68,6 @@ console.log(stringify(data))
 
 ## Supported types
 
-
 * ``String``
 * ``Number``
 * ``Boolean``
@@ -95,7 +94,24 @@ Type: ``any``
 #### options
 Type: `Object`
 
-Options to adjust result format
+Options to adjust result format.  
+
+You can also use prepared options:
+
+- ``stringify.options.json``
+  format to regular JSON format
+- ``stringify.options.standadjs``
+  format using standadjs rules
+- ``stringify.options.compact``
+  format without folding, quotes and spaces
+
+**example**
+````js
+const data = {a: 'string', b: false, c: [0, 1, 2]}
+console.log(stringify(data, stringify.options.compact))
+// output
+{a:'string',b:false,c:[0,1,2]}
+````
 
 ##### options.safe
 Type: `Boolean`  

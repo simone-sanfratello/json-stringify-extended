@@ -91,14 +91,18 @@ tap.test('stringify - unsafe circularity in object', (test) => {
   test.plan(1)
   const data = {a: {b: {c: 0}}}
   data.a.b.d = data.a
-  test.throw(() => { stringify(data) })
+  test.throw(() => {
+    stringify(data)
+  })
 })
 
 tap.test('stringify - unsafe circularity in array', (test) => {
   test.plan(1)
   const data = [0, {}, 2, {}]
   data[3].a = data[1]
-  test.throw(() => { stringify(data) })
+  test.throw(() => {
+    stringify(data)
+  })
 })
 
 tap.test('stringify - safe circularity in object', (test) => {
@@ -145,4 +149,12 @@ tap.test('stringify - bad data set, default options', (test) => {
   mixed_array:["a",-1,null,undefined,new Date("2016-12-31T00:00:00.000Z")]
 }`
   test.equal(stringify(data), result)
+})
+
+tap.test('stringify - using prepared options.compact', (test) => {
+  test.plan(1)
+  const data = {a: 'string', b: false, c: [0, 1, 2]}
+  const result = `{a:'string',b:false,c:[0,1,2]}`
+  console.log(stringify(data, stringify.options.compact))
+  test.equal(stringify(data, stringify.options.compact), result)
 })
