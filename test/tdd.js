@@ -196,3 +196,44 @@ tap.test('stringify - use options.replace not a function', (test) => {
     stringify(data, options)
   })
 })
+
+tap.test('stringify - use options.filter', (test) => {
+  test.plan(1)
+  const data = {
+    user: 'alice',
+    password: 'it-s-a-secret',
+    id: 1,
+    meta: ['1', 1],
+    greet: function () { return 'hi' }
+  }
+  const options = {
+    filter: function (key, value) {
+      if (key === 'password') {
+        return false
+      }
+      if (value === 1) {
+        return false
+      }
+      if (typeof value === 'function') {
+        return false
+      }
+      return true
+    }
+  }
+  const result = `{
+  user:"alice",
+  meta:["1"]
+}`
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - use options.filter not a function', (test) => {
+  test.plan(1)
+  const data = {user: 'alice'}
+  const options = {
+    filter: ''
+  }
+  test.throw(() => {
+    stringify(data, options)
+  })
+})

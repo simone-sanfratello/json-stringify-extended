@@ -7,7 +7,8 @@
  * @param {String} options.keyQuote character used for quote keys; default null - no quotes
  * @param {String} options.valueQuote character used for quote values; default "
  * @param {Boolean} options.keySpace add space after key: ; default false
- * @param {function(key:String, value:*)} options.replace replace data by key or value
+ * @param {function(key:String, value:*)} options.replace replace by key or value
+ * @param {function(key:String, value:*)} options.filter filter by key or value
  */
 const stringify = function (data, options) {
   let __done = []
@@ -23,9 +24,9 @@ const stringify = function (data, options) {
         keySpace: false,
         valueQuote: '"',
         safe: false,
-        replace: null
+        replace: null,
+        filter: null
       // @todo compress: false,
-      // @todo filter: null,
       // @todo sort: false,
       }
     } else {
@@ -40,6 +41,9 @@ const stringify = function (data, options) {
       }
       if (options.replace !== undefined && typeof options.replace !== 'function') {
         throw new Error('options.replace is not a function')
+      }
+      if (options.filter !== undefined && typeof options.filter !== 'function') {
+        throw new Error('options.filter is not a function')
       }
     }
 
@@ -86,6 +90,13 @@ const stringify = function (data, options) {
     deferred: function (obj) {
       return obj.toString()
     },
+    date: function (obj) {
+      // @todo if compact obj.getTime
+      return 'new Date(' + options.valueQuote + obj.toISOString() + options.valueQuote + ')'
+    },
+    regexp: function (obj) {
+      return obj.toString()
+    },
     object: function (obj, deep, path) {
       if (!path) {
         path = '[Object]'
@@ -101,7 +112,12 @@ const stringify = function (data, options) {
       const _out = []
       for (const key in obj) {
         let _path = path + '.' + key
-        const _item = __main(key, obj[key], deep + 1, _path)
+        const _item = __item(key, obj[key], deep + 1, _path)
+
+        // if item is discarded by filtering
+        if (!_item) {
+          continue
+        }
 
         // wrap strange key with quotes
         if (_item.key && !_item.key.match(/^\w[\d\w_]*$/)) {
@@ -123,16 +139,12 @@ const stringify = function (data, options) {
       const _out = []
       for (let i = 0; i < array.length; i++) {
         const _path = path + '#' + i
-        _out.push(__main(null, array[i], deep, _path).value)
+        const _item = __item(null, array[i], deep, _path)
+        if (_item) {
+          _out.push(_item.value)
+        }
       }
       return '[' + _out.join(',') + ']'
-    },
-    date: function (obj) {
-      // @todo if compact obj.getTime
-      return 'new Date(' + options.valueQuote + obj.toISOString() + options.valueQuote + ')'
-    },
-    regexp: function (obj) {
-      return obj.toString()
     }
   }
 
@@ -148,8 +160,12 @@ const stringify = function (data, options) {
     return quote + __replace(value, quote, '\\' + quote) + quote
   }
 
-  const __main = function (key, value, deep, path) {
+  const __item = function (key, value, deep, path) {
     if (!deep) deep = 1
+
+    if (options.filter && !options.filter(key, value)) {
+      return null
+    }
 
     if (options.replace) {
       ({key, value} = options.replace(key, value))
@@ -174,7 +190,8 @@ const stringify = function (data, options) {
   }
 
   __options()
-  return __main(null, data).value
+  const _item = __item(null, data)
+  return _item ? _item.value : {}
 }
 
 // deferred type

@@ -150,10 +150,10 @@ Default: `false`
 Add a space beetwen `key:` and `value`.
 
 ##### options.replace
-Type: `function(key:String, value:String) {key, value}`  
+Type: `function(key:String, value:String) return {key, value}`  
 Default: `null`
 
-Use function to replace ``value`` and/or ``key`` of each element.  
+Use function to replace ``key`` and/or ``value`` of each element.  
 Must return an object ``{key, value}``.  
 
 **example**
@@ -185,6 +185,44 @@ console.log(stringify(data, options))
 }
 ````
 
+##### options.filter
+Type: `function(key:String, value:String) return Boolean`  
+Default: `null`
+
+Use function to filter by ``key`` and/or ``value`` each element.  
+Rturn ``true`` to keep element or ``false`` to discard.  
+
+**example**
+````js
+const data = {
+  user: 'alice',
+  password: 'it-s-a-secret',
+  id: 1,
+  meta: ['1', 1],
+  greet: function() { return 'hi' }
+}
+const options = {
+  filter: function (key, value) {
+    if (key === 'password') {
+      return false
+    }
+    if (value === 1) {
+      return false
+    }
+    if (typeof value === 'function') {
+      return false
+    }
+    return true
+  }
+}
+console.log(stringify(data, options))
+// output
+{
+  user:"alice",
+  meta:["1"]
+}
+````
+
 ---
 
 ## TODO
@@ -192,8 +230,7 @@ console.log(stringify(data, options))
 - support Buffer, File
 - options.discardUndefined
 - options.compress
-  compress data: function body, date value
-- filter function
+  compress data: function body, date value etc.
 - sort keys
 
 ## License
