@@ -38,7 +38,8 @@ const data = {
   j: Infinity,
   k: NaN,
   l: undefined,
-  m: stringify.deferred('my.enum.VALUE')
+  m: stringify.deferred('my.enum.VALUE'),
+  n: Buffer.from('7468697320697320612074c3a97374', 'hex')
 }
 
 console.log(stringify(data))
@@ -61,7 +62,8 @@ console.log(stringify(data))
   j:Infinity,
   k:NaN,
   l:undefined,
-  m:my.enum.VALUE
+  m:my.enum.VALUE,
+  n:Buffer.from("dGhpcyBpcyBhIHTDqXN0")
 }
 
 ```
@@ -236,11 +238,11 @@ Discard `null` and ``undefined`` values.
 
 ## TODO
 
-- support File
 - options.compress
   compress data: function body, date value etc.
 - sort keys
 - browser version
+  support for File, Blob
 
 ## License
 
