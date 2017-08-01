@@ -15,7 +15,8 @@ tap.test('stringify - basic data set, default options', (test) => {
     i: null,
     j: Infinity,
     k: NaN,
-    l: undefined
+    l: undefined,
+    m: Buffer.from('7468697320697320612074c3a97374', 'hex')
   }
   const result = `{
   a:"lorem ipsum",
@@ -33,7 +34,8 @@ tap.test('stringify - basic data set, default options', (test) => {
   i:null,
   j:Infinity,
   k:NaN,
-  l:undefined
+  l:undefined,
+  m:Buffer.from("dGhpcyBpcyBhIHTDqXN0")
 }`
   test.equal(stringify(data), result)
 })

@@ -98,6 +98,10 @@ const stringify = function (data, options) {
     regexp: function (obj) {
       return obj.toString()
     },
+    buffer: function (obj) {
+      // @todo check nodejs version?
+      return 'Buffer.from(' + options.valueQuote + obj.toString('base64') + options.valueQuote + ')'
+    },
     object: function (obj, deep, path) {
       if (!path) {
         path = '[Object]'
@@ -184,6 +188,8 @@ const stringify = function (data, options) {
         _type = 'date'
       } else if (value instanceof RegExp) {
         _type = 'regexp'
+      } else if (value instanceof Buffer) {
+        _type = 'buffer'
       } else if (value instanceof stringify._deferred) {
         _type = 'deferred'
       } else if (value === null) {

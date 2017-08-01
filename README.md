@@ -235,10 +235,11 @@ Discard `null` and ``undefined`` values.
 
 ## TODO
 
-- support Buffer, File
+- support File
 - options.compress
   compress data: function body, date value etc.
 - sort keys
+- browser version
 
 ## License
 
