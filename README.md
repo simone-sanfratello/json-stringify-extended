@@ -76,6 +76,7 @@ console.log(stringify(data))
 * ``Array``
 * ``Date``
 * ``RegExp``
+* ``Buffer``
 * ``null``
 * ``Infinity``
 * ``NaN``
