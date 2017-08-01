@@ -9,6 +9,8 @@
  * @param {Boolean} options.keySpace add space after key: ; default false
  * @param {function(key:String, value:*)} options.replace replace by key or value
  * @param {function(key:String, value:*)} options.filter filter by key or value
+ * @param {Boolean} options.discard discard nulla and undefined values ; default false
+ *
  */
 const stringify = function (data, options) {
   let __done = []
@@ -25,9 +27,8 @@ const stringify = function (data, options) {
         valueQuote: '"',
         safe: false,
         replace: null,
-        filter: null
-      // @todo compress: false,
-      // @todo sort: false,
+        filter: null,
+        discard: false
       }
     } else {
       if (!options.endline && options.endline !== '') {
@@ -162,6 +163,10 @@ const stringify = function (data, options) {
 
   const __item = function (key, value, deep, path) {
     if (!deep) deep = 1
+
+    if (options.discard && (value === undefined || value === null)) {
+      return null
+    }
 
     if (options.filter && !options.filter(key, value)) {
       return null

@@ -237,3 +237,28 @@ tap.test('stringify - use options.filter not a function', (test) => {
     stringify(data, options)
   })
 })
+
+tap.test('stringify - use options.discard', (test) => {
+  test.plan(1)
+  const data = {
+    a: '',
+    b: 1,
+    c: 0,
+    d: true,
+    e: false,
+    f: null,
+    g: undefined
+  }
+  const options = {
+    discard: true,
+    spacing: '\t'
+  }
+  const result = `{
+\ta:"",
+\tb:1,
+\tc:0,
+\td:true,
+\te:false
+}`
+  test.equal(stringify(data, options), result)
+})

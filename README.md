@@ -131,66 +131,13 @@ Default: `  ` (two spaces)
 
 Indentation string, should contains only spacing chars as `\t` or spaces ` `.
 
-##### options.keyQuote
-Type: `String`  
-Default: `null`
-
-Character used for quote keys, default is `null`, means no quotes in keys. Should be `"` or `'` or `null`
-
-##### options.valueQuote
-Type: `String`  
-Default: `'`
-
-Character used for quote values, default is `'`. Should be `"` or `'`
-
-##### options.keySpace
-Type: `Boolean`  
-Default: `false`
-
-Add a space beetwen `key:` and `value`.
-
-##### options.replace
-Type: `function(key:String, value:String) return {key, value}`  
-Default: `null`
-
-Use function to replace ``key`` and/or ``value`` of each element.  
-Must return an object ``{key, value}``.  
-
-**example**
-````js
-const data = {
-  user: 'alice',
-  password: 'it-s-a-secret',
-  id: 1,
-  meta: ['1', 1]
-}
-const options = {
-  replace: function (key, value) {
-    if (key === 'password') {
-      return {key: 'secret', value: '***'}
-    }
-    if (value === 1) {
-      return {key, value: 'one'}
-    }
-    return {key, value}
-  }
-}
-console.log(stringify(data, options))
-// output
-{
-  user:"alice",
-  secret:"***",
-  id:"one",
-  meta:["1","one"]
-}
-````
-
 ##### options.filter
 Type: `function(key:String, value:String) return Boolean`  
 Default: `null`
 
 Use function to filter by ``key`` and/or ``value`` each element.  
-Rturn ``true`` to keep element or ``false`` to discard.  
+Return ``true`` to keep element or ``false`` to discard.  
+``filter`` is applied before ``replace``.  
 
 **example**
 ````js
@@ -223,12 +170,72 @@ console.log(stringify(data, options))
 }
 ````
 
+##### options.replace
+Type: `function(key:String, value:String) return {key, value}`  
+Default: `null`
+
+Use function to replace ``key`` and/or ``value`` of each element.  
+Must return an object ``{key, value}``.  
+``filter`` is applied before ``replace``.  
+
+**example**
+````js
+const data = {
+  user: 'alice',
+  password: 'it-s-a-secret',
+  id: 1,
+  meta: ['1', 1]
+}
+const options = {
+  replace: function (key, value) {
+    if (key === 'password') {
+      return {key: 'secret', value: '***'}
+    }
+    if (value === 1) {
+      return {key, value: 'one'}
+    }
+    return {key, value}
+  }
+}
+console.log(stringify(data, options))
+// output
+{
+  user:"alice",
+  secret:"***",
+  id:"one",
+  meta:["1","one"]
+}
+````
+
+##### options.keyQuote
+Type: `String`  
+Default: `null`
+
+Character used for quote keys, default is `null`, means no quotes in keys. Should be `"` or `'` or `null`
+
+##### options.valueQuote
+Type: `String`  
+Default: `'`
+
+Character used for quote values, default is `'`. Should be `"` or `'`
+
+##### options.keySpace
+Type: `Boolean`  
+Default: `false`
+
+Add a space beetwen `key:` and `value`.
+
+##### options.discard
+Type: `Boolean`  
+Default: `false`
+
+Discard `null` and ``undefined`` values.  
+
 ---
 
 ## TODO
 
 - support Buffer, File
-- options.discardUndefined
 - options.compress
   compress data: function body, date value etc.
 - sort keys
