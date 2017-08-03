@@ -240,7 +240,6 @@ Discard `null` and ``undefined`` values.
 
 - options.compress
   compress data: function body, date value etc.
-- sort keys
 - browser version
   support for File, Blob
 
