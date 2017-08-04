@@ -1,3 +1,11 @@
+'use strict'
+
+const uglify = require('uglify-js')
+
+const FUNCTION_COMPRESS_OPTIONS = {
+
+}
+
 /**
  *
  * @param {*} data
@@ -9,8 +17,8 @@
  * @param {Boolean} options.keySpace add space after key: ; default false
  * @param {function(key:String, value:*)} options.replace replace by key or value
  * @param {function(key:String, value:*)} options.filter filter by key or value
- * @param {Boolean} options.discard discard nulla and undefined values ; default false
- *
+ * @param {Boolean} options.discard discard null and undefined values; default false
+ * @param {Boolean} options.compress compress data like function, Date, Buffer; default false
  */
 const stringify = function (data, options) {
   let __done = []
@@ -28,7 +36,8 @@ const stringify = function (data, options) {
         safe: false,
         replace: null,
         filter: null,
-        discard: false
+        discard: false,
+        compress: false
       }
     } else {
       if (!options.endline && options.endline !== '') {
@@ -71,6 +80,16 @@ const stringify = function (data, options) {
 
   const __serialize = {
     function: function (obj) {
+      if (options.compress) {
+        let _min
+        try {
+          _min = uglify.minify(obj.toString(), FUNCTION_COMPRESS_OPTIONS)
+          return _min.code
+        } catch (e) {
+          console.warn('unable to compress function', obj.toString(), _min.error)
+          return obj.toString()
+        }
+      }
       return obj.toString()
     },
     number: function (obj) {
@@ -92,7 +111,9 @@ const stringify = function (data, options) {
       return obj.toString()
     },
     date: function (obj) {
-      // @todo if compact obj.getTime
+      if (options.compress) {
+        return 'new Date(' + obj.getTime() + ')'
+      }
       return 'new Date(' + options.valueQuote + obj.toISOString() + options.valueQuote + ')'
     },
     regexp: function (obj) {
@@ -168,7 +189,7 @@ const stringify = function (data, options) {
   const __item = function (key, value, deep, path) {
     if (!deep) deep = 1
 
-    if (options.discard && (value === undefined || value === null)) {
+    if ((options.discard || options.compress) && (value === undefined || value === null)) {
       return null
     }
 

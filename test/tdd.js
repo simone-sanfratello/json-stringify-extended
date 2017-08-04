@@ -264,3 +264,34 @@ tap.test('stringify - use options.discard', (test) => {
 }`
   test.equal(stringify(data, options), result)
 })
+
+tap.test('stringify - use options.compress', (test) => {
+  test.plan(1)
+  const data = {
+    a: new Date('2014-12-10T05:00:00.000Z'),
+    b: Buffer.from('base64-iamge'),
+    c: function freakyfib(num) {
+      var a = 1, b = 0, temp;
+
+      while (num >= 0) {
+        temp = a
+        a = a + b
+        b = temp
+        num--
+        // random comment
+      }
+      return b;
+      var useless = 6
+    },
+    f: null,
+    g: undefined
+
+  }
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  const result = `{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a}}`
+  test.equal(stringify(data, options), result)
+})

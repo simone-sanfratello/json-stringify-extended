@@ -134,6 +134,13 @@ Default: `  ` (two spaces)
 
 Indentation string, should contains only spacing chars as `\t` or spaces ` `.
 
+##### options.compress
+Type: `Boolean`  
+Default: `false`
+
+Compress data for ``function`` and ``Date`` discard ``null`` and ``undefined`` values, but don't remove spaces and useless quotes.
+
+
 ##### options.filter
 Type: `function(key:String, value:String) return Boolean`  
 Default: `null`
@@ -238,8 +245,6 @@ Discard `null` and ``undefined`` values.
 
 ## TODO
 
-- options.compress
-  compress data: function body, date value etc.
 - browser version
   support for File, Blob
 

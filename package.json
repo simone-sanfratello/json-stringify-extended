@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "JSON.stringify with extended data types support",
   "main": "main.js",
   "engines": {
@@ -9,6 +9,11 @@
   "devDependencies": {
     "standard": "^x",
     "tap": "^x"
+  },
+  "standard": {
+    "ignore": [
+      "test/"
+    ]
   },
   "scripts": {
     "test": "standard && tap test/*",
@@ -23,5 +28,8 @@
     "stringify"
   ],
   "author": "Simone Sanfratello <simone@braceslab.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "uglify-js": "^3.x"
+  }
 }
