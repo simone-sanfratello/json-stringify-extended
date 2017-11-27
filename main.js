@@ -165,15 +165,18 @@ const stringify = function (data, options) {
         return '[Circularity]'
       }
 
+      const _spacing0 = __spacing(deep)
+      const _spacing1 = _spacing0 + options.spacing
+
       const _out = []
       for (let i = 0; i < array.length; i++) {
         const _path = path + '#' + i
-        const _item = __item(null, array[i], deep, _path)
+        const _item = __item(null, array[i], deep + 1, _path)
         if (_item) {
-          _out.push(_item.value)
+          _out.push(options.endline + _spacing1 + _item.value)
         }
       }
-      return '[' + _out.join(',') + ']'
+      return '[' + _out.join(',') + options.endline + _spacing0 + ']'
     }
   }
 

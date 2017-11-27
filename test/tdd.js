@@ -28,7 +28,11 @@ tap.test('stringify - basic data set, default options', (test) => {
     b:0.1,
     c:-2
   },
-  f:["a","b","c"],
+  f:[
+    "a",
+    "b",
+    "c"
+  ],
   g:new Date("2017-01-01T00:00:00.000Z"),
   h:/a|b/,
   i:null,
@@ -70,7 +74,11 @@ tap.test('stringify - basic data set, custom options', (test) => {
     b: 0.1,
     c: -2
   },
-  f: ['a','b','c'],
+  f: [
+    'a',
+    'b',
+    'c'
+  ],
   g: new Date('2017-01-01T00:00:00.000Z'),
   h: /a|b/,
   i: null,
@@ -148,7 +156,13 @@ tap.test('stringify - bad data set, default options', (test) => {
       console.log(a + b)
       return true
     },
-  mixed_array:["a",-1,null,undefined,new Date("2016-12-31T00:00:00.000Z")]
+  mixed_array:[
+    "a",
+    -1,
+    null,
+    undefined,
+    new Date("2016-12-31T00:00:00.000Z")
+  ]
 }`
   test.equal(stringify(data), result)
 })
@@ -183,7 +197,10 @@ tap.test('stringify - use options.replace', (test) => {
   user:"alice",
   secret:"***",
   id:"one",
-  meta:["1","one"]
+  meta:[
+    "1",
+    "one"
+  ]
 }`
   test.equal(stringify(data, options), result)
 })
@@ -224,7 +241,9 @@ tap.test('stringify - use options.filter', (test) => {
   }
   const result = `{
   user:"alice",
-  meta:["1"]
+  meta:[
+    "1"
+  ]
 }`
   test.equal(stringify(data, options), result)
 })
@@ -304,6 +323,40 @@ line1`
   }
   const result = `{
   a:"line0\\nline1"
+}`
+  test.equal(stringify(data), result)
+})
+
+tap.test('stringify - array of objects', (test) => {
+  test.plan(1)
+  const data = {
+    a: [{ name: 'Al', age: 2}, {name: 'Bob', age: 3}, {name: 'Carl', age: 4}],
+    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}}, 
+    
+  }
+  const result = `{
+  a:[
+    {
+      name:"Al",
+      age:2
+    },
+    {
+      name:"Bob",
+      age:3
+    },
+    {
+      name:"Carl",
+      age:4
+    }
+  ],
+  c:{
+    name:"Dan",
+    age:5,
+    d:{
+      name:"El",
+      age:6
+    }
+  }
 }`
   test.equal(stringify(data), result)
 })

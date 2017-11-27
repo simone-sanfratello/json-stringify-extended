@@ -55,7 +55,11 @@ console.log(stringify(data))
     b:0.1,
     c:-2
   },
-  f:["a","b","c"],
+  f:[
+    "a",
+    "b",
+    "c"
+  ],
   g:new Date("2017-01-01T00:00:00.000Z"),
   h:/a|b/,
   i:null,
@@ -176,7 +180,9 @@ console.log(stringify(data, options))
 // output
 {
   user:"alice",
-  meta:["1"]
+  meta:[
+    "1"
+  ]
 }
 ````
 
@@ -213,7 +219,10 @@ console.log(stringify(data, options))
   user:"alice",
   secret:"***",
   id:"one",
-  meta:["1","one"]
+  meta:[
+    "1",
+    "one"
+  ]
 }
 ````
 
