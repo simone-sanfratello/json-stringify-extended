@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "JSON.stringify with extended data types support",
   "main": "main.js",
   "engines": {

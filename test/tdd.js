@@ -295,3 +295,15 @@ tap.test('stringify - use options.compress', (test) => {
   const result = `{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a}}`
   test.equal(stringify(data, options), result)
 })
+
+tap.test('stringify - multiline strings', (test) => {
+  test.plan(1)
+  const data = {
+    a: `line0
+line1`
+  }
+  const result = `{
+  a:"line0\\nline1"
+}`
+  test.equal(stringify(data), result)
+})

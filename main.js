@@ -96,6 +96,9 @@ const stringify = function (data, options) {
       return obj
     },
     string: function (obj) {
+      if (obj.indexOf('\n') !== -1) {
+        obj = obj.split('\n').join('\\n')
+      }
       return __quote(obj, options.valueQuote)
     },
     boolean: function (obj) {
