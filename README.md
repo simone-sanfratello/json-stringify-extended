@@ -252,11 +252,6 @@ Discard `null` and ``undefined`` values.
 
 ---
 
-## TODO
-
-- browser version
-  support for File, Blob
-
 ## License
 
 The MIT License (MIT)

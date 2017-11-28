@@ -1,6 +1,5 @@
 # dirs
 /.vscode/
-/dist/
 /log/
 /pid/
 /node_modules/
@@ -17,3 +16,5 @@
 *._*
 .*.swp
 .~*
+
+package-lock.json
