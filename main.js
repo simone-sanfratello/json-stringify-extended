@@ -263,6 +263,4 @@ stringify.options = {
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = stringify
-}
+module.exports = stringify

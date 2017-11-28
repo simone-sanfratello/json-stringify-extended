@@ -252,6 +252,11 @@ Discard `null` and ``undefined`` values.
 
 ---
 
+## TODO
+- browser version (webpack? browserify?)
+
+---
+
 ## License
 
 The MIT License (MIT)
