@@ -4,7 +4,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-JSON.stringify with extended data types support (such ``function`` type) and some options
+JSON.stringify any data types
 
 ## Purpose
 
@@ -12,7 +12,7 @@ JSON.stringify with extended data types support (such ``function`` type) and som
 - Stringify in JavaScript Object
 - Use not yet defined types (like enums)
 - Avoid useless quotes
-- Throw exception or not in circularity references
+- Choose to throw exception or not in circularity references
 
 ## Installing
 
