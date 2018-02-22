@@ -255,6 +255,7 @@ Discard `null` and ``undefined`` values.
 
 ## TODO
 - [ ] browser version (webpack? browserify? parcel?)
+- [ ] coverage badge
 
 ---
 
