@@ -3,6 +3,7 @@
 [![NPM Version](http://img.shields.io/npm/v/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![NPM Downloads](https://img.shields.io/npm/dm/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/braceslab/json-stringify-extended.svg?branch=master)](https://travis-ci.org/braceslab/json-stringify-extended)
 
 JSON.stringify any data types
 
