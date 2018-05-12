@@ -253,8 +253,7 @@ Discard `null` and ``undefined`` values.
 
 ---
 
-## TODO v. 1.0
-- [ ] browser version (import module)
+## TODO
 - [ ] coverage badge
 
 ---
