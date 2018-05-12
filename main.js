@@ -1,10 +1,6 @@
-'use strict'
 
 const uglify = require('uglify-js')
-
-const FUNCTION_COMPRESS_OPTIONS = {
-
-}
+const FUNCTION_COMPRESS_OPTIONS = {}
 
 /**
  *
@@ -21,7 +17,14 @@ const FUNCTION_COMPRESS_OPTIONS = {
  * @param {Boolean} options.compress compress data like function, Date, Buffer; default false
  */
 const stringify = function (data, options) {
-  let __done = []
+  const __done = {
+    values: [],
+    paths: []
+  }
+  const __counter = {
+    object: 0,
+    array: 0
+  }
   let __keySpace
 
   const __options = function () {
@@ -68,13 +71,15 @@ const stringify = function (data, options) {
   }
 
   const __circularity = function (val, path) {
-    if (__done.indexOf(val) !== -1) {
+    const i = __done.values.indexOf(val)
+    if (i !== -1 && path.indexOf(__done.paths[i]) === 0) {
       if (!options.safe) {
         throw new Error('Circular reference @ ' + path)
       }
       return true
     }
-    __done.push(val)
+    __done.values.push(val)
+    __done.paths.push(path)
     return false
   }
 
@@ -130,8 +135,9 @@ const stringify = function (data, options) {
       return 'Buffer.from(' + options.valueQuote + obj.toString('base64') + options.valueQuote + ')'
     },
     object: function (obj, deep, path) {
+      __counter.object++
       if (!path) {
-        path = '[Object]'
+        path = '{}'
       }
 
       const _spacing0 = __spacing(deep)
@@ -160,8 +166,9 @@ const stringify = function (data, options) {
       return '{' + _out.join(',') + options.endline + _spacing0 + '}'
     },
     array: function (array, deep, path) {
+      __counter.array++
       if (!path) {
-        path = '[Array]'
+        path = '[]'
       }
 
       if (__circularity(array, path)) {
@@ -173,8 +180,8 @@ const stringify = function (data, options) {
 
       const _out = []
       for (let i = 0; i < array.length; i++) {
-        const _path = path + '#' + i
-        const _item = __item(null, array[i], deep + 1, _path)
+        // const _path = path + '#' + i
+        const _item = __item(null, array[i], deep + 1, path)
         if (_item) {
           _out.push(options.endline + _spacing1 + _item.value)
         }

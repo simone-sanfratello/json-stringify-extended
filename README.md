@@ -253,8 +253,8 @@ Discard `null` and ``undefined`` values.
 
 ---
 
-## TODO
-- [ ] browser version (webpack? browserify? parcel?)
+## TODO v. 1.0
+- [ ] browser version (import module)
 - [ ] coverage badge
 
 ---

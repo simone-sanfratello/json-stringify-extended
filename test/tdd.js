@@ -101,7 +101,7 @@ tap.test('stringify - deferred type', (test) => {
   test.plan(1)
   const data = {a: stringify.deferred('my.enum.VALUE')}
   const options = {spacing: '', endline: ''}
-  const result = `{a:my.enum.VALUE}`
+  const result = '{a:my.enum.VALUE}'
   test.equal(stringify(data, options), result)
 })
 
@@ -121,6 +121,29 @@ tap.test('stringify - unsafe circularity in array', (test) => {
   test.throw(() => {
     stringify(data)
   })
+})
+
+tap.test('stringify - unsafe double circularity', (test) => {
+  test.plan(1)
+  const data = {a: {c: {}, b:{}}}
+  data.b = data.a
+  data.a.c.d = data.b
+  test.throw(() => {
+    stringify(data)
+  })
+})
+
+tap.test('stringify - not a circularity', (test) => {
+  test.plan(1)
+  const list = ['a', 'b', 'c'];
+  const data = [
+    {a: list},
+    {b: list}
+  ];
+  const result = '[{a:["a","b","c"]},{b:["a","b","c"]}]'
+
+  const options = {endline: '', spacing: ''}
+  test.equal(stringify(data, options), result)
 })
 
 tap.test('stringify - safe circularity in object', (test) => {
@@ -319,7 +342,7 @@ tap.test('stringify - use options.compress', (test) => {
     spacing: '',
     endline: ''
   }
-  const result = `{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a}}`
+  const result = `{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;0<=r;)f=n,n+=a,a=f,r--;return a}}`
   test.equal(stringify(data, options), result)
 })
 

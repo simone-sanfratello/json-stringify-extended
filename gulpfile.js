@@ -18,7 +18,7 @@ gulp.task('default', function () {
     debug: true
   })
     .transform('babelify', {
-      presets: ['es2015', 'env'],
+      presets: ['env'],
       minified: true,
       comments: false
     })

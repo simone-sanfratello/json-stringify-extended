@@ -5,6 +5,7 @@
 /node_modules/
 /coverage/
 /.nyc_output/
+/shrinkwrap.yaml
 
 # logs
 *.log
