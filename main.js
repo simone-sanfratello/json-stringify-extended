@@ -1,6 +1,8 @@
 
-const uglify = require('uglify-js')
-const FUNCTION_COMPRESS_OPTIONS = {}
+const uglify = require('uglify-es')
+const FUNCTION_COMPRESS_OPTIONS = {parse: {bare_returns: true}}
+const FUNCTION_COMPRESS_NAMED = 'const f='
+const FUNCTION_COMPRESS_NAMED_LENGTH = FUNCTION_COMPRESS_NAMED.length
 
 /**
  *
@@ -89,7 +91,11 @@ const stringify = function (data, options) {
         let _min
         try {
           _min = uglify.minify(obj.toString(), FUNCTION_COMPRESS_OPTIONS)
-          return _min.code
+          if (!_min.code) {
+            _min = uglify.minify(FUNCTION_COMPRESS_NAMED + obj.toString(), FUNCTION_COMPRESS_OPTIONS)
+            _min.code = _min.code.substr(FUNCTION_COMPRESS_NAMED_LENGTH, _min.code.length - 1 - FUNCTION_COMPRESS_NAMED_LENGTH)
+          }
+          return _min.code || obj.toString()
         } catch (e) {
           console.warn('unable to compress function', obj.toString(), _min.error)
           return obj.toString()

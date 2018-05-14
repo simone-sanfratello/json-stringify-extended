@@ -342,7 +342,40 @@ tap.test('stringify - use options.compress', (test) => {
     spacing: '',
     endline: ''
   }
-  const result = `{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;0<=r;)f=n,n+=a,a=f,r--;return a}}`
+  const result = '{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a}}'
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - function compression', (test) => {
+  test.plan(1)
+  const data = {
+    a: function(){},
+    b: () => {return true},
+    c: function _void(none) { },
+    d: function summyEs6 (a, b, c) {
+      let d = a + b; 
+      const e = c; 
+      return d+e
+    },
+    e: function summyEs5 (a, b, c) {
+      var d = a + b; 
+      var e = c; 
+      return d+e
+    },
+    f: function (a, b, c) {
+      let d = a + b; 
+      const e = c; 
+      return d+e
+    },
+    g: function named() {}
+
+  }
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  const result = `{bau}}`
   test.equal(stringify(data, options), result)
 })
 

@@ -1,8 +1,8 @@
 {
   "name": "json-stringify-extended",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
-    "uglify-js": "^3.x"
+    "uglify-es": "^3.3.9"
   },
   "devDependencies": {
     "babel-cli": "^6.x",
@@ -18,7 +18,7 @@
     "microbundle": "^0.4.4",
     "pre-commit": "^1.x",
     "standard": "^11.x",
-    "tap": "^10.x",
+    "tap": "^11.x",
     "vinyl-source-stream": "^1.x"
   },
   "pre-commit": [
@@ -39,6 +39,9 @@
   },
   "description": "JSON.stringify with extended data types support",
   "main": "main.js",
+  "files": [
+    "main.js"
+  ],
   "engines": {
     "node": ">= 6.x"
   },
