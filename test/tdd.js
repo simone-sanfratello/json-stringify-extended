@@ -375,7 +375,7 @@ tap.test('stringify - function compression', (test) => {
     spacing: '',
     endline: ''
   }
-  const result = `{bau}}`
+  const result = '{a:function(){},b:()=>!0,c:function _void(i){},d:function summyEs6(n,u,m){return n+u+m},e:function summyEs5(n,u,m){return n+u+m},f:function(n,t,c){return n+t+c},g:function named(){}}'
   test.equal(stringify(data, options), result)
 })
 
