@@ -254,8 +254,9 @@ Discard `null` and ``undefined`` values.
 ---
 
 ## TODO
-- [ ] compatibility: es5, es6
+- [ ] output compatibility: es5, es6
 - [ ] coverage badge
+- [ ] browser version
 
 ---
 

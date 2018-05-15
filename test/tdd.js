@@ -385,6 +385,21 @@ tap.test('stringify - function compression', (test) => {
   test.equal(stringify(data, options), result)
 })
 
+// https://github.com/braceslab/json-stringify-extended/issues/2
+tap.test('stringify - function compression', (test) => {
+  test.plan(1)
+  var fn = function(){};
+  fn.toString = function(){return "'test'";};
+  var data = {a: fn, b: fn};
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  const result = '{a:"test",b:"test"}'
+  test.equal(stringify(data, options), result)
+})
+
 tap.test('stringify - multiline strings', (test) => {
   test.plan(1)
   const data = {

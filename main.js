@@ -94,9 +94,9 @@ const stringify = function (data, options) {
           if (!_min.code) {
             _min = uglify.minify(FUNCTION_COMPRESS_NAMED + obj.toString(), FUNCTION_COMPRESS_OPTIONS)
             _min.code = _min.code.substr(FUNCTION_COMPRESS_NAMED_LENGTH)
-            _min.code = _min.code.replace(/;+$/, '')
           }
-          return _min.code || obj.toString()
+          const _code = _min.code || obj.toString()
+          return _code.replace(/;+$/, '')
         } catch (e) {
           console.warn('unable to compress function', obj.toString(), _min.error)
           return obj.toString()
