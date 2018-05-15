@@ -367,15 +367,21 @@ tap.test('stringify - function compression', (test) => {
       const e = c; 
       return d+e
     },
-    g: function named() {}
-
+    g: function named() {},
+    h: function() {return "a string"},
   }
+  // https://github.com/braceslab/json-stringify-extended/issues/2
+  const _fn = function(){ return 0}
+  _fn.toString = function () {return 1 }
+  data.i = _fn
+  data.l = _fn
+  
   const options = {
     compress: true,
     spacing: '',
     endline: ''
   }
-  const result = '{a:function(){},b:()=>!0,c:function _void(i){},d:function summyEs6(n,u,m){return n+u+m},e:function summyEs5(n,u,m){return n+u+m},f:function(n,t,c){return n+t+c},g:function named(){}}'
+  const result = '{a:function(){},b:()=>!0,c:function _void(i){},d:function summyEs6(n,u,m){return n+u+m},e:function summyEs5(n,u,m){return n+u+m},f:function(n,t,c){return n+t+c},g:function named(){},h:function(){return"a string"},i:1,l:1}'
   test.equal(stringify(data, options), result)
 })
 
