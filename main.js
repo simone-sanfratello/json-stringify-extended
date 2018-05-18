@@ -187,8 +187,8 @@ const stringify = function (data, options) {
 
       const _out = []
       for (let i = 0; i < array.length; i++) {
-        // const _path = path + '#' + i
-        const _item = __item(null, array[i], deep + 1, path)
+        let _path = path + '.' + i
+        const _item = __item(null, array[i], deep + 1, _path)
         if (_item) {
           _out.push(options.endline + _spacing1 + _item.value)
         }
