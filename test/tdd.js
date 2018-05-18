@@ -114,10 +114,20 @@ tap.test('stringify - unsafe circularity in object', (test) => {
   })
 })
 
-tap.test('stringify - unsafe circularity in array', (test) => {
+tap.test('stringify - unsafe circularity in array (1)', (test) => {
   test.plan(1)
   const data = [0, {}, 2, {}]
   data[3].a = data[3]
+  test.throw(() => {
+    stringify(data)
+  })
+})
+
+tap.test('stringify - unsafe circularity in array (2)', (test) => {
+  test.plan(1)
+  const data = [[], []]
+  data[0].push(data[1])
+  data[1].push(data[0])
   test.throw(() => {
     stringify(data)
   })
