@@ -114,10 +114,20 @@ tap.test('stringify - unsafe circularity in object', (test) => {
   })
 })
 
-tap.test('stringify - unsafe circularity in array', (test) => {
+tap.test('stringify - unsafe circularity in array (1)', (test) => {
   test.plan(1)
   const data = [0, {}, 2, {}]
-  data[3].a = data[1]
+  data[3].a = data[3]
+  test.throw(() => {
+    stringify(data)
+  })
+})
+
+tap.test('stringify - unsafe circularity in array (2)', (test) => {
+  test.plan(1)
+  const data = [[], []]
+  data[0].push(data[1])
+  data[1].push(data[0])
   test.throw(() => {
     stringify(data)
   })
@@ -133,7 +143,7 @@ tap.test('stringify - unsafe double circularity', (test) => {
   })
 })
 
-tap.test('stringify - not a circularity', (test) => {
+tap.test('stringify - not a circularity (1)', (test) => {
   test.plan(1)
   const list = ['a', 'b', 'c'];
   const data = [
@@ -141,6 +151,19 @@ tap.test('stringify - not a circularity', (test) => {
     {b: list}
   ];
   const result = '[{a:["a","b","c"]},{b:["a","b","c"]}]'
+
+  const options = {endline: '', spacing: ''}
+  test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - not a circularity (2)', (test) => {
+  test.plan(1)
+  const list = ['a', 'b', 'c'];
+  const data = [
+    {a: list},
+    {a: list}
+  ];
+  const result = '[{a:["a","b","c"]},{a:["a","b","c"]}]'
 
   const options = {endline: '', spacing: ''}
   test.equal(stringify(data, options), result)
@@ -159,7 +182,7 @@ tap.test('stringify - safe circularity in object', (test) => {
 tap.test('stringify - safe circularity in array', (test) => {
   test.plan(1)
   const data = [0, [], 2, []]
-  data[3][0] = data[1]
+  data[3][0] = data[3]
   const result = `[0,[],2,[[Circularity]]]`
 
   const options = {safe: true, endline: '', spacing: ''}
@@ -353,18 +376,18 @@ tap.test('stringify - function compression', (test) => {
     b: () => {return true},
     c: function _void(none) { },
     d: function summyEs6 (a, b, c) {
-      let d = a + b; 
-      const e = c; 
+      let d = a + b;
+      const e = c;
       return d+e
     },
     e: function summyEs5 (a, b, c) {
-      var d = a + b; 
-      var e = c; 
+      var d = a + b;
+      var e = c;
       return d+e
     },
     f: function (a, b, c) {
-      let d = a + b; 
-      const e = c; 
+      let d = a + b;
+      const e = c;
       return d+e
     },
     g: function named() {},
@@ -375,7 +398,7 @@ tap.test('stringify - function compression', (test) => {
   _fn.toString = function () {return 1 }
   data.i = _fn
   data.l = _fn
-  
+
   const options = {
     compress: true,
     spacing: '',
@@ -416,8 +439,8 @@ tap.test('stringify - array of objects', (test) => {
   test.plan(1)
   const data = {
     a: [{ name: 'Al', age: 2}, {name: 'Bob', age: 3}, {name: 'Carl', age: 4}],
-    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}}, 
-    
+    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}},
+
   }
   const result = `{
   a:[
