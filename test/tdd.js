@@ -369,7 +369,7 @@ tap.test('stringify - use options.compress', (test) => {
   test.equal(stringify(data, options), result)
 })
 
-tap.test('stringify - function compression', (test) => {
+tap.test('stringify - function compression (1)', (test) => {
   test.plan(1)
   const data = {
     a: function(){},
@@ -388,7 +388,7 @@ tap.test('stringify - function compression', (test) => {
     f: function (a, b, c) {
       let d = a + b;
       const e = c;
-      return d+e
+      return d + e
     },
     g: function named() {},
     h: function() {return "a string"},
@@ -409,7 +409,7 @@ tap.test('stringify - function compression', (test) => {
 })
 
 // https://github.com/braceslab/json-stringify-extended/issues/2
-tap.test('stringify - function compression', (test) => {
+tap.test('stringify - function compression (2)', (test) => {
   test.plan(1)
   var fn = function(){};
   fn.toString = function(){return "'test'";};
@@ -435,12 +435,11 @@ line1`
   test.equal(stringify(data), result)
 })
 
-tap.test('stringify - array of objects', (test) => {
+tap.test('stringify - recordset', (test) => {
   test.plan(1)
   const data = {
     a: [{ name: 'Al', age: 2}, {name: 'Bob', age: 3}, {name: 'Carl', age: 4}],
-    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}},
-
+    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}}
   }
   const result = `{
   a:[

@@ -256,7 +256,8 @@ Discard `null` and ``undefined`` values.
 ## TODO
 - [ ] output compatibility: es5, es6
 - [ ] coverage badge
-- [ ] browser version
+- [ ] browser support
+  - (see)[https://www.contentful.com/blog/2017/04/04/es6-modules-support-lands-in-browsers-is-it-time-to-rethink-bundling/]
 
 ---
 

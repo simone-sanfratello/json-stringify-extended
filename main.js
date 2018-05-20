@@ -156,7 +156,7 @@ const stringify = function (data, options) {
 
       const _out = []
       for (const key in obj) {
-        let _path = path + '.' + key
+        const _path = path + '.' + key
         const _item = __item(key, obj[key], deep + 1, _path)
 
         // if item is discarded by filtering
@@ -187,7 +187,7 @@ const stringify = function (data, options) {
 
       const _out = []
       for (let i = 0; i < array.length; i++) {
-        let _path = path + '.' + i
+        const _path = path + '.' + i
         const _item = __item(null, array[i], deep + 1, _path)
         if (_item) {
           _out.push(options.endline + _spacing1 + _item.value)

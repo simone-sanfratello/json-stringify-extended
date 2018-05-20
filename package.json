@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dependencies": {
     "uglify-es": "^3.3.9"
   },
@@ -22,8 +22,7 @@
     "vinyl-source-stream": "^1.x"
   },
   "pre-commit": [
-    "test",
-    "build"
+    "test"
   ],
   "standard": {
     "ignore": [
