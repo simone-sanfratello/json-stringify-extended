@@ -9,8 +9,8 @@ JSON.stringify any data types
 
 ## Purpose
 
-- Stringify more primitive types into JSON format
-- Stringify in JavaScript Object
+- stringify more primitive types into JSON format
+- stringify in JavaScript Object
 - Use not yet defined types (e.g. enums)
 - Avoid useless quotes
 - Choose to throw exception, or not in circularity references
@@ -77,7 +77,7 @@ console.log(stringify(data))
 
 * ``string``
 * ``number``
-* ``noolean``
+* ``boolean``
 * ``function``
 * ``Object``
 * ``Array``
@@ -94,7 +94,7 @@ console.log(stringify(data))
 
 ### stringify (data[, options])
 
-Stringify data into string
+stringify data into string
 
 #### data
 Type: `any`
@@ -122,32 +122,32 @@ console.log (stringify (data, stringify.options.compact))
 ````
 
 ##### options.safe
-Type: `Boolean`  
+Type: `boolean`  
 Default: `false`
 
 Works in safe mode, so it will not throws exception for circularity.
 
 ##### options.endline
-Type: `String`  
+Type: `string`  
 Default: `\n`
 
 Endline string should contain spacing chars as `\n` or `\r\n`. Set to empty string `''` for one line output.
 
 ##### options.spacing
-Type: `String`  
+Type: `string`  
 Default: `  ` (two spaces)
 
 Indentation string should contains only spacing chars as `\t` or spaces ` `.
 
 ##### options.compress
-Type: `Boolean`  
+Type: `boolean`  
 Default: `false`
 
 Compress data for ``function`` and ``Date`` discard ``null`` and ``undefined`` values, and keep spaces and useless quotes.
 
 
 ##### options.filter
-Type: `function(key:String, value:String) return Boolean`  
+Type: `function(key:string, value:string) return boolean`  
 Default: `null`
 
 Use the function to filter ``key`` and/or ``value`` of each element.  
@@ -188,7 +188,7 @@ console.log(stringify(data, options))
 ````
 
 ##### options.replace
-Type: `function(key:String, value:String) return {key, value}`  
+Type: `function(key:string, value:string) return {key, value}`  
 Default: `null`
 
 Use the function to replace ``key`` and/or ``value`` of each element.  
@@ -228,25 +228,25 @@ console.log(stringify(data, options))
 ````
 
 ##### options.keyQuote
-Type: `String`  
+Type: `string`  
 Default: `null`
 
 The character to be used for quote is the “ key, the  default is `null`, meaning no quotes in keys. And `"` or `'` or `null` means there is a quote. 
 
 ##### options.valueQuote
-Type: `String`  
+Type: `string`  
 Default: `'`
 
 The character to be used for quote values default is `'`. Must be `"` or `'`.
 
 ##### options.keySpace
-Type: `Boolean`  
+Type: `boolean`  
 Default: `false`
 
 Add a space between key:` and `value`.
 
 ##### options.discard
-Type: `Boolean`  
+Type: `boolean`  
 Default: `false`
 
 Discard the values `null` and ``undefined``.  
