@@ -165,8 +165,10 @@ const stringify = function (data, options) {
         }
 
         // wrap strange key with quotes
-        if (_item.key && !_item.key.match(/^\w[\d\w_]*$/)) {
-          _item.key = __quote(key, options.keyQuote || '"')
+        if (_item.key) {
+          if (_item.key.match(/^[^a-zA-Z]/) || _item.key.match(/[-.'"\s]/)) {
+            _item.key = __quote(key, options.keyQuote || '"')
+          }
         }
         _out.push(options.endline + _spacing1 + _item.key + ':' + __keySpace + _item.value)
       }
