@@ -97,6 +97,25 @@ tap.test('stringify - basic data set, custom options', (test) => {
   test.equal(stringify(data, options), result)
 })
 
+tap.test('stringify - object keys quoting', (test) => {
+  test.plan(1)
+  const data = {
+    "1number": 0,
+    ":colon": 0,
+    " space": 0,
+    " space": 0,
+    "thunder": 0,
+    "storm": 0,
+    "thunder-storm": 0,
+    'dquoted"key': 0,
+    "squoted'key": 0
+  }
+  const options = {spacing: '', endline: ''}
+  const result = '{"1number":0,":colon":0," space":0,thunder:0,storm:0,"thunder-storm":0,"dquoted\\"key":0,"squoted\'key":0}'
+  test.equal(stringify(data, options), result)
+})
+
+
 tap.test('stringify - deferred type', (test) => {
   test.plan(1)
   const data = {a: stringify.deferred('my.enum.VALUE')}
