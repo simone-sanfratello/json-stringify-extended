@@ -166,7 +166,7 @@ const stringify = function (data, options) {
 
         // wrap strange key with quotes
         if (_item.key) {
-          if (_item.key.match(/^[^a-zA-Z]/) || _item.key.match(/[-.'"\s]/)) {
+          if (_item.key.match(/^[^a-zA-Z]/) || !_item.key.match(/^\w[\d\w_]*$/)) {
             _item.key = __quote(key, options.keyQuote || '"')
           }
         }

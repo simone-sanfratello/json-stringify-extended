@@ -97,22 +97,24 @@ tap.test('stringify - basic data set, custom options', (test) => {
   test.equal(stringify(data, options), result)
 })
 
-tap.test('stringify - object keys quoting', (test) => {
+tap.test('stringify - fix keys', (test) => {
   test.plan(1)
   const data = {
     "1number": 0,
     ":colon": 0,
+    _underscore: 1,
     " space": 0,
     " space": 0,
-    "thunder": 0,
-    "storm": 0,
+    thunder: 1,
+    storm: 1,
     "thunder-storm": 0,
     "thunder.storm": 0,
     'dquoted"key': 0,
-    "squoted'key": 0
+    "squoted'key": 0,
+    "$thunder.storm": 0
   }
-  const options = {spacing: '', endline: ''}
-  const result = '{"1number":0,":colon":0," space":0,thunder:0,storm:0,"thunder-storm":0,"thunder.storm":0,"dquoted\\"key":0,"squoted\'key":0}'
+  const options = {spacing: '', endline: '', fixKeys: true}
+  const result = `{"1number":0,":colon":0,"_underscore":1," space":0,thunder:1,storm:1,"thunder-storm":0,"thunder.storm":0,"dquoted\\"key":0,"squoted'key":0,"$thunder.storm":0}`
   test.equal(stringify(data, options), result)
 })
 
