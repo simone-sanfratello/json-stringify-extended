@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-extended",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "dependencies": {
     "uglify-es": "^3.3.9"
   },
