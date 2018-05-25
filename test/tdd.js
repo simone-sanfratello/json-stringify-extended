@@ -107,11 +107,12 @@ tap.test('stringify - object keys quoting', (test) => {
     "thunder": 0,
     "storm": 0,
     "thunder-storm": 0,
+    "thunder.storm": 0,
     'dquoted"key': 0,
     "squoted'key": 0
   }
   const options = {spacing: '', endline: ''}
-  const result = '{"1number":0,":colon":0," space":0,thunder:0,storm:0,"thunder-storm":0,"dquoted\\"key":0,"squoted\'key":0}'
+  const result = '{"1number":0,":colon":0," space":0,thunder:0,storm:0,"thunder-storm":0,"thunder.storm":0,"dquoted\\"key":0,"squoted\'key":0}'
   test.equal(stringify(data, options), result)
 })
 
