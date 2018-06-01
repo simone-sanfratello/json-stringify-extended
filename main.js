@@ -214,7 +214,7 @@ const stringify = function (data, options) {
   const __item = function (key, value, deep, path) {
     if (!deep) deep = 1
 
-    if ((options.discard || options.compress) && (value === undefined || value === null)) {
+    if ((options.discard) && (value === undefined || value === null)) {
       return null
     }
 
