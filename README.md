@@ -253,6 +253,13 @@ Discard the values `null` and ``undefined``.
 
 ---
 
+## Changelog
+
+#### v. 2.0.0
+- separate `compress` and `discard` option (to keep object keys on compress)
+
+---
+
 ## TODO
 - [ ] output compatibility: es5, es6
 - [ ] coverage badge
