@@ -387,7 +387,7 @@ tap.test('stringify - use options.compress', (test) => {
     spacing: '',
     endline: ''
   }
-  const result = '{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a}}'
+  const result = '{a:new Date(1418187600000),b:Buffer.from("YmFzZTY0LWlhbWdl"),c:function freakyfib(r){for(var f,n=1,a=0;r>=0;)f=n,n+=a,a=f,r--;return a},f:null,g:undefined}'
   test.equal(stringify(data, options), result)
 })
 
