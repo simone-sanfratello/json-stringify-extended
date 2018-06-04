@@ -143,8 +143,8 @@ Indentation string should contains only spacing chars as `\t` or spaces ` `.
 Type: `boolean`  
 Default: `false`
 
-Compress data for ``function`` and ``Date`` discard ``null`` and ``undefined`` values, and keep spaces and useless quotes.
-
+Compress data for ``function`` and ``Date``.
+Note: in version < `2.0.0` also discard ``null`` and ``undefined`` values.
 
 ##### options.filter
 Type: `function(key:string, value:string) return boolean`  
@@ -243,7 +243,7 @@ The character to be used for quote values default is `'`. Must be `"` or `'`.
 Type: `boolean`  
 Default: `false`
 
-Add a space between key:` and `value`.
+Add a space between `key:` and `value`.
 
 ##### options.discard
 Type: `boolean`  
