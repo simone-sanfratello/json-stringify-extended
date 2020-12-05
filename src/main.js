@@ -8,7 +8,7 @@ const FUNCTION_COMPRESS_NAMED_LENGTH = FUNCTION_COMPRESS_NAMED.length
 // regexp collection
 const SYMBOL_STRIP = /Symbol\((.*)\)/
 const IRREGULAR_KEY = /^[^a-zA-Z]/
-const SQUARED_IN_KEY =  /^\w[\d\w_]*$/
+const SQUARED_IN_KEY = /^\w[\d\w_]*$/
 const STRIP_TRAILING_SEMICOLON = /;+$/
 
 /**
