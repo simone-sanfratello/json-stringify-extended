@@ -3,17 +3,17 @@
 [![NPM Version](http://img.shields.io/npm/v/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![NPM Downloads](https://img.shields.io/npm/dm/json-stringify-extended.svg?style=flat)](https://www.npmjs.org/package/json-stringify-extended)
 [![JS Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![Build Status](https://travis-ci.org/braceslab/json-stringify-extended.svg?branch=master)](https://travis-ci.org/braceslab/json-stringify-extended)
+![100% code coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+
 
 JSON.stringify any data types
 
 ## Purpose
 
-- stringify more primitive types into JSON format
-- stringify in JavaScript Object
-- Use not yet defined types (e.g. enums)
-- Avoid useless quotes
-- Choose to throw exception, or not in circularity references
+- stringify primitive js types properly without limitation
+- get control on circular reference
+- use custom types not yet defined (e.g. enums)
+- avoid quotes if not needed
 
 ## Installing
 
@@ -84,6 +84,7 @@ console.log(stringify(data))
 * ``Date``
 * ``RegExp``
 * ``Buffer``
+* ``Symbol``
 * ``null``
 * ``Infinity``
 * ``NaN``
@@ -249,22 +250,19 @@ Add a space between `key:` and `value`.
 Type: `boolean`  
 Default: `false`
 
-Discard the values `null` and ``undefined``.  
+Discard values `null` and ``undefined``.  
 
 ---
 
 ## Changelog
 
+#### v. 2.1.0
+- support `Symbol` types
+- **100%** code coverage
+- drop `node` < `10`
+
 #### v. 2.0.0
 - separate `compress` and `discard` option (to keep object keys on compress)
-
----
-
-## TODO
-- [ ] output compatibility: es5, es6
-- [ ] coverage badge
-- [ ] browser support
- - (see)[https://www.contentful.com/blog/2017/04/04/es6-modules-support-lands-in-browsers-is-it-time-to-rethink-bundling/]
 
 ---
 
@@ -272,7 +270,7 @@ Discard the values `null` and ``undefined``.
 
 The MIT License (MIT)
 
-Copyright (c) 2017-2018 [braces lab](https://braceslab.com)
+Copyright (c) 2017-2020 Simone Sanfratello
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

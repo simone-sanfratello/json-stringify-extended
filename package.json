@@ -1,54 +1,42 @@
 {
   "name": "json-stringify-extended",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "dependencies": {
     "uglify-es": "^3.3.9"
   },
   "devDependencies": {
-    "babel-cli": "^6.x",
-    "babel-core": "^6.x",
-    "babel-preset-env": "^1.6.x",
-    "babelify": "^8.x",
-    "browserify": "^14.x",
-    "fs-extra": "^5.x",
-    "gulp": "^3.x",
-    "gulp-buffer": "0.0.x",
-    "gulp-clean": "^0.3.x",
-    "gulp-sourcemaps": "^2.6.x",
-    "microbundle": "^0.4.4",
-    "pre-commit": "^1.x",
-    "standard": "^11.x",
-    "tap": "^11.x",
-    "vinyl-source-stream": "^1.x"
+    "pre-commit": "^1.2.2",
+    "standard": "^16.0.3",
+    "tap": "^14.11.0"
   },
   "pre-commit": [
+    "format",
     "test"
   ],
   "standard": {
     "ignore": [
-      "test/",
-      "dist/"
+      "dist/",
+      "test/"
     ]
   },
   "scripts": {
-    "build": "gulp",
-    "clean": "gulp clean",
-    "test": "standard && tap test/*",
-    "test-cov": "standard && tap test/* --cov"
+    "format": "standard --fix",
+    "test": "tap test/*",
+    "test:coverage": "tap test/* --cov"
   },
   "description": "JSON.stringify with extended data types support",
-  "main": "main.js",
+  "main": "src/main.js",
   "files": [
-    "main.js"
+    "src/main.js"
   ],
   "engines": {
-    "node": ">= 6.x"
+    "node": ">= 10"
   },
   "author": "Simone Sanfratello <simone@braceslab.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/braceslab/json-stringify-extended.git"
+    "url": "git+https://github.com/simone-sanfratello/json-stringify-extended.git"
   },
   "keywords": [
     "json",

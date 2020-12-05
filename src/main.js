@@ -1,8 +1,15 @@
+'use strict'
 
 const uglify = require('uglify-es')
-const FUNCTION_COMPRESS_OPTIONS = {parse: {bare_returns: true}}
+const FUNCTION_COMPRESS_OPTIONS = { parse: { bare_returns: true } }
 const FUNCTION_COMPRESS_NAMED = 'const f='
 const FUNCTION_COMPRESS_NAMED_LENGTH = FUNCTION_COMPRESS_NAMED.length
+
+// regexp collection
+const SYMBOL_STRIP = /Symbol\((.*)\)/
+const IRREGULAR_KEY = /^[^a-zA-Z]/
+const SQUARED_IN_KEY =  /^\w[\d\w_]*$/
+const STRIP_TRAILING_SEMICOLON = /;+$/
 
 /**
  *
@@ -19,17 +26,17 @@ const FUNCTION_COMPRESS_NAMED_LENGTH = FUNCTION_COMPRESS_NAMED.length
  * @param {Boolean} options.compress compress data like function, Date, Buffer; default false
  */
 const stringify = function (data, options) {
-  const __done = {
+  const _done = {
     values: [],
     paths: []
   }
-  const __counter = {
+  const _counter = {
     object: 0,
     array: 0
   }
-  let __keySpace
+  let _keySpace
 
-  const __options = function () {
+  function validate (options) {
     if (!options) {
       // default options
       options = {
@@ -62,30 +69,31 @@ const stringify = function (data, options) {
       }
     }
 
-    __keySpace = options.keySpace ? ' ' : ''
+    _keySpace = options.keySpace ? ' ' : ''
+    return options
   }
 
-  const __replace = function (str, find, replace) {
+  function replace (str, find, replace) {
     if (str.indexOf(find) === -1) {
       return str
     }
     return str.split(find).join(replace)
   }
 
-  const __circularity = function (val, path) {
-    const i = __done.values.indexOf(val)
-    if (i !== -1 && path.indexOf(__done.paths[i]) === 0) {
+  function circularity (val, path) {
+    const i = _done.values.indexOf(val)
+    if (i !== -1 && path.indexOf(_done.paths[i]) === 0) {
       if (!options.safe) {
         throw new Error('Circular reference @ ' + path)
       }
       return true
     }
-    __done.values.push(val)
-    __done.paths.push(path)
+    _done.values.push(val)
+    _done.paths.push(path)
     return false
   }
 
-  const __serialize = {
+  const _serialize = {
     function: function (obj) {
       if (options.compress) {
         let _min
@@ -95,29 +103,29 @@ const stringify = function (data, options) {
             _min = uglify.minify(FUNCTION_COMPRESS_NAMED + obj.toString(), FUNCTION_COMPRESS_OPTIONS)
             _min.code = _min.code.substr(FUNCTION_COMPRESS_NAMED_LENGTH)
           }
-          const _code = _min.code || obj.toString()
-          return _code.replace(/;+$/, '')
-        } catch (e) {
+          const _code = _min.code// ? || obj.toString()
+          return _code.replace(STRIP_TRAILING_SEMICOLON, '')
+        } catch (error) {
           console.warn('unable to compress function', obj.toString(), _min.error)
           return obj.toString()
         }
       }
       return obj.toString()
     },
-    number: function (obj) {
-      return obj
+    number: function (n) {
+      return n
     },
-    string: function (obj) {
-      if (obj.indexOf('\n') !== -1) {
-        obj = obj.split('\n').join('\\n')
+    string: function (str) {
+      if (str.indexOf('\n') !== -1) {
+        str = str.split('\n').join('\\n')
       }
-      if (obj.indexOf('\t') !== -1) {
-        obj = obj.split('\t').join('\\t')
+      if (str.indexOf('\t') !== -1) {
+        str = str.split('\t').join('\\t')
       }
-      return __quote(obj, options.valueQuote)
+      return quote(str, options.valueQuote)
     },
-    boolean: function (obj) {
-      return obj ? 'true' : 'false'
+    boolean: function (value) {
+      return value ? 'true' : 'false'
     },
     null: function () {
       return 'null'
@@ -125,39 +133,41 @@ const stringify = function (data, options) {
     undefined: function () {
       return 'undefined'
     },
-    deferred: function (obj) {
-      return obj.toString()
+    deferred: function (val) {
+      return val.toString()
     },
-    date: function (obj) {
+    date: function (date) {
       if (options.compress) {
-        return 'new Date(' + obj.getTime() + ')'
+        return 'new Date(' + date.getTime() + ')'
       }
-      return 'new Date(' + options.valueQuote + obj.toISOString() + options.valueQuote + ')'
+      return 'new Date(' + options.valueQuote + date.toISOString() + options.valueQuote + ')'
+    },
+    symbol: function (symbol) {
+      return 'Symbol(' + options.valueQuote + symbol.toString().match(SYMBOL_STRIP)[1] + options.valueQuote + ')'
     },
     regexp: function (obj) {
       return obj.toString()
     },
     buffer: function (obj) {
-      // @todo check nodejs version?
       return 'Buffer.from(' + options.valueQuote + obj.toString('base64') + options.valueQuote + ')'
     },
     object: function (obj, deep, path) {
-      __counter.object++
+      _counter.object++
       if (!path) {
         path = '{}'
       }
 
-      const _spacing0 = __spacing(deep)
+      const _spacing0 = spacing(deep)
       const _spacing1 = _spacing0 + options.spacing
 
-      if (__circularity(obj, path)) {
+      if (circularity(obj, path)) {
         return options.endline + _spacing1 + '[Circularity]' + options.endline + _spacing0
       }
 
       const _out = []
       for (const key in obj) {
         const _path = path + '.' + key
-        const _item = __item(key, obj[key], deep + 1, _path)
+        const _item = item(key, obj[key], deep + 1, _path)
 
         // if item is discarded by filtering
         if (!_item) {
@@ -165,32 +175,30 @@ const stringify = function (data, options) {
         }
 
         // wrap strange key with quotes
-        if (_item.key) {
-          if (_item.key.match(/^[^a-zA-Z]/) || !_item.key.match(/^\w[\d\w_]*$/)) {
-            _item.key = __quote(key, options.keyQuote || '"')
-          }
+        if (_item.key.match(IRREGULAR_KEY) || !_item.key.match(SQUARED_IN_KEY)) {
+          _item.key = quote(key, options.keyQuote || '"')
         }
-        _out.push(options.endline + _spacing1 + _item.key + ':' + __keySpace + _item.value)
+        _out.push(options.endline + _spacing1 + _item.key + ':' + _keySpace + _item.value)
       }
       return '{' + _out.join(',') + options.endline + _spacing0 + '}'
     },
     array: function (array, deep, path) {
-      __counter.array++
+      _counter.array++
       if (!path) {
         path = '[]'
       }
 
-      if (__circularity(array, path)) {
+      if (circularity(array, path)) {
         return '[Circularity]'
       }
 
-      const _spacing0 = __spacing(deep)
+      const _spacing0 = spacing(deep)
       const _spacing1 = _spacing0 + options.spacing
 
       const _out = []
       for (let i = 0; i < array.length; i++) {
         const _path = path + '.' + i
-        const _item = __item(null, array[i], deep + 1, _path)
+        const _item = item(null, array[i], deep + 1, _path)
         if (_item) {
           _out.push(options.endline + _spacing1 + _item.value)
         }
@@ -199,19 +207,19 @@ const stringify = function (data, options) {
     }
   }
 
-  const __spacing = function (deep) {
-    let _spacing = ''
+  function spacing (deep) {
+    let spacing = ''
     for (let i = 0; i < deep - 1; i++) {
-      _spacing += options.spacing
+      spacing += options.spacing
     }
-    return _spacing
+    return spacing
   }
 
-  const __quote = function (value, quote) {
-    return quote + __replace(value, quote, '\\' + quote) + quote
+  function quote (value, quote) {
+    return quote + replace(value, quote, '\\' + quote) + quote
   }
 
-  const __item = function (key, value, deep, path) {
+  function item (key, value, deep, path) {
     if (!deep) deep = 1
 
     if ((options.discard) && (value === undefined || value === null)) {
@@ -223,7 +231,7 @@ const stringify = function (data, options) {
     }
 
     if (options.replace) {
-      ({key, value} = options.replace(key, value))
+      ({ key, value } = options.replace(key, value))
     }
 
     let _type = typeof value
@@ -243,12 +251,12 @@ const stringify = function (data, options) {
       }
     }
 
-    return {key, value: __serialize[_type](value, deep, path)}
+    return { key, value: _serialize[_type](value, deep, path) }
   }
 
-  __options()
-  const _item = __item(null, data)
-  return _item ? _item.value : {}
+  options = validate(options)
+  const _item = item(null, data)
+  return _item.value
 }
 
 // deferred type
@@ -265,7 +273,7 @@ stringify._deferred.prototype.toString = function () {
   return this.val
 }
 
-// prepared options
+// preset options
 stringify.options = {
   json: {
     keyQuote: '"',

@@ -1,5 +1,5 @@
 const tap = require('tap')
-const stringify = require('../main')
+const stringify = require('../src/main')
 
 tap.test('stringify - basic data set, default options', (test) => {
   test.plan(1)
@@ -8,7 +8,7 @@ tap.test('stringify - basic data set, default options', (test) => {
     b: 1,
     c: true,
     d: function (a, b) { console.log(a + b) },
-    e: {a: 0, b: 0.1, c: -2},
+    e: { a: 0, b: 0.1, c: -2 },
     f: ['a', 'b', 'c'],
     g: new Date('2017-01-01'),
     h: /a|b/,
@@ -22,7 +22,7 @@ tap.test('stringify - basic data set, default options', (test) => {
     multiline
 string`,
     p: '\ttab char'
-}
+  }
   const result = `{
   a:"lorem ipsum",
   b:1,
@@ -59,14 +59,15 @@ tap.test('stringify - basic data set, custom options', (test) => {
     b: 1,
     c: true,
     d: function (a, b) { console.log(a + b) },
-    e: {a: 0, b: 0.1, c: -2},
+    e: { a: 0, b: 0.1, c: -2 },
     f: ['a', 'b', 'c'],
     g: new Date('2017-01-01'),
     h: /a|b/,
     i: null,
     j: Infinity,
     k: NaN,
-    l: undefined
+    l: undefined,
+    "a weid key": 'op op'
   }
   const options = {
     valueQuote: "'",
@@ -92,7 +93,8 @@ tap.test('stringify - basic data set, custom options', (test) => {
   i: null,
   j: Infinity,
   k: NaN,
-  l: undefined
+  l: undefined,
+  "a weid key": 'op op'
 }`
   test.equal(stringify(data, options), result)
 })
@@ -100,36 +102,35 @@ tap.test('stringify - basic data set, custom options', (test) => {
 tap.test('stringify - fix keys', (test) => {
   test.plan(1)
   const data = {
-    "1number": 0,
-    ":colon": 0,
+    '1number': 0,
+    ':colon': 0,
     _underscore: 1,
-    " space": 0,
-    " space": 0,
+    ' space': 0,
+    ' space': 0,
     thunder: 1,
     storm: 1,
-    "thunder-storm": 0,
-    "thunder.storm": 0,
+    'thunder-storm': 0,
+    'thunder.storm': 0,
     'dquoted"key': 0,
     "squoted'key": 0,
-    "$thunder.storm": 0
+    '$thunder.storm': 0
   }
-  const options = {spacing: '', endline: '', fixKeys: true}
-  const result = `{"1number":0,":colon":0,"_underscore":1," space":0,thunder:1,storm:1,"thunder-storm":0,"thunder.storm":0,"dquoted\\"key":0,"squoted'key":0,"$thunder.storm":0}`
+  const options = { spacing: '', endline: '', fixKeys: true }
+  const result = '{"1number":0,":colon":0,"_underscore":1," space":0,thunder:1,storm:1,"thunder-storm":0,"thunder.storm":0,"dquoted\\"key":0,"squoted\'key":0,"$thunder.storm":0}'
   test.equal(stringify(data, options), result)
 })
 
-
 tap.test('stringify - deferred type', (test) => {
   test.plan(1)
-  const data = {a: stringify.deferred('my.enum.VALUE')}
-  const options = {spacing: '', endline: ''}
+  const data = { a: stringify.deferred('my.enum.VALUE') }
+  const options = { spacing: '', endline: '' }
   const result = '{a:my.enum.VALUE}'
   test.equal(stringify(data, options), result)
 })
 
 tap.test('stringify - unsafe circularity in object', (test) => {
   test.plan(1)
-  const data = {a: {b: {c: 0}}}
+  const data = { a: { b: { c: 0 } } }
   data.a.b.d = data.a
   test.throw(() => {
     stringify(data)
@@ -157,7 +158,7 @@ tap.test('stringify - unsafe circularity in array (2)', (test) => {
 
 tap.test('stringify - unsafe double circularity', (test) => {
   test.plan(1)
-  const data = {a: {c: {}, b:{}}}
+  const data = { a: { c: {}, b: {} } }
   data.b = data.a
   data.a.c.d = data.b
   test.throw(() => {
@@ -167,37 +168,37 @@ tap.test('stringify - unsafe double circularity', (test) => {
 
 tap.test('stringify - not a circularity (1)', (test) => {
   test.plan(1)
-  const list = ['a', 'b', 'c'];
+  const list = ['a', 'b', 'c']
   const data = [
-    {a: list},
-    {b: list}
-  ];
+    { a: list },
+    { b: list }
+  ]
   const result = '[{a:["a","b","c"]},{b:["a","b","c"]}]'
 
-  const options = {endline: '', spacing: ''}
+  const options = { endline: '', spacing: '' }
   test.equal(stringify(data, options), result)
 })
 
 tap.test('stringify - not a circularity (2)', (test) => {
   test.plan(1)
-  const list = ['a', 'b', 'c'];
+  const list = ['a', 'b', 'c']
   const data = [
-    {a: list},
-    {a: list}
-  ];
+    { a: list },
+    { a: list }
+  ]
   const result = '[{a:["a","b","c"]},{a:["a","b","c"]}]'
 
-  const options = {endline: '', spacing: ''}
+  const options = { endline: '', spacing: '' }
   test.equal(stringify(data, options), result)
 })
 
 tap.test('stringify - safe circularity in object', (test) => {
   test.plan(1)
-  const data = {a: {b: {c: 0}}}
+  const data = { a: { b: { c: 0 } } }
   data.a.b.d = data.a
-  const result = `{a:{b:{c:0,d:[Circularity]}}}`
+  const result = '{a:{b:{c:0,d:[Circularity]}}}'
 
-  const options = {safe: true, endline: '', spacing: ''}
+  const options = { safe: true, endline: '', spacing: '' }
   test.equal(stringify(data, options), result)
 })
 
@@ -205,9 +206,9 @@ tap.test('stringify - safe circularity in array', (test) => {
   test.plan(1)
   const data = [0, [], 2, []]
   data[3][0] = data[3]
-  const result = `[0,[],2,[[Circularity]]]`
+  const result = '[0,[],2,[[Circularity]]]'
 
-  const options = {safe: true, endline: '', spacing: ''}
+  const options = { safe: true, endline: '', spacing: '' }
   test.equal(stringify(data, options), result)
 })
 
@@ -245,8 +246,8 @@ tap.test('stringify - bad data set, default options', (test) => {
 
 tap.test('stringify - using prepared options.compact', (test) => {
   test.plan(1)
-  const data = {a: 'string', b: false, c: [0, 1, 2]}
-  const result = `{a:'string',b:false,c:[0,1,2]}`
+  const data = { a: 'string', b: false, c: [0, 1, 2] }
+  const result = '{a:\'string\',b:false,c:[0,1,2]}'
   test.equal(stringify(data, stringify.options.compact), result)
 })
 
@@ -261,12 +262,12 @@ tap.test('stringify - use options.replace', (test) => {
   const options = {
     replace: function (key, value) {
       if (key === 'password') {
-        return {key: 'secret', value: '***'}
+        return { key: 'secret', value: '***' }
       }
       if (value === 1) {
-        return {key, value: 'one'}
+        return { key, value: 'one' }
       }
-      return {key, value}
+      return { key, value }
     }
   }
   const result = `{
@@ -283,7 +284,7 @@ tap.test('stringify - use options.replace', (test) => {
 
 tap.test('stringify - use options.replace not a function', (test) => {
   test.plan(1)
-  const data = {user: 'alice'}
+  const data = { user: 'alice' }
   const options = {
     replace: 0
   }
@@ -326,7 +327,7 @@ tap.test('stringify - use options.filter', (test) => {
 
 tap.test('stringify - use options.filter not a function', (test) => {
   test.plan(1)
-  const data = {user: 'alice'}
+  const data = { user: 'alice' }
   const options = {
     filter: ''
   }
@@ -365,8 +366,8 @@ tap.test('stringify - use options.compress', (test) => {
   const data = {
     a: new Date('2014-12-10T05:00:00.000Z'),
     b: Buffer.from('base64-iamge'),
-    c: function freakyfib(num) {
-      var a = 1, b = 0, temp;
+    c: function freakyfib (num) {
+      var a = 1; var b = 0; var temp
 
       while (num >= 0) {
         temp = a
@@ -375,8 +376,8 @@ tap.test('stringify - use options.compress', (test) => {
         num--
         // random comment
       }
-      return b;
-      var useless = 6
+      return b
+      const useless = 6
     },
     f: null,
     g: undefined
@@ -394,30 +395,30 @@ tap.test('stringify - use options.compress', (test) => {
 tap.test('stringify - function compression (1)', (test) => {
   test.plan(1)
   const data = {
-    a: function(){},
-    b: () => {return true},
-    c: function _void(none) { },
+    a: function () {},
+    b: () => { return true },
+    c: function _void (none) { },
     d: function summyEs6 (a, b, c) {
-      let d = a + b;
-      const e = c;
-      return d+e
-    },
-    e: function summyEs5 (a, b, c) {
-      var d = a + b;
-      var e = c;
-      return d+e
-    },
-    f: function (a, b, c) {
-      let d = a + b;
-      const e = c;
+      const d = a + b
+      const e = c
       return d + e
     },
-    g: function named() {},
-    h: function() {return "a string"},
+    e: function summyEs5 (a, b, c) {
+      const d = a + b
+      const e = c
+      return d + e
+    },
+    f: function (a, b, c) {
+      const d = a + b
+      const e = c
+      return d + e
+    },
+    g: function named () {},
+    h: function () { return 'a string' }
   }
   // https://github.com/braceslab/json-stringify-extended/issues/2
-  const _fn = function(){ return 0}
-  _fn.toString = function () {return 1 }
+  const _fn = function () { return 0 }
+  _fn.toString = function () { return 1 }
   data.i = _fn
   data.l = _fn
 
@@ -433,9 +434,9 @@ tap.test('stringify - function compression (1)', (test) => {
 // https://github.com/braceslab/json-stringify-extended/issues/2
 tap.test('stringify - function compression (2)', (test) => {
   test.plan(1)
-  var fn = function(){};
-  fn.toString = function(){return "'test'";};
-  var data = {a: fn, b: fn};
+  const fn = function () {}
+  fn.toString = function () { return "'test'" }
+  const data = { a: fn, b: fn }
   const options = {
     compress: true,
     spacing: '',
@@ -443,6 +444,19 @@ tap.test('stringify - function compression (2)', (test) => {
   }
   const result = '{a:"test",b:"test"}'
   test.equal(stringify(data, options), result)
+})
+
+tap.test('stringify - function compression (3)', (test) => {
+  test.plan(1)
+  const fn = Math.abs
+  const data = { a: fn, b: fn }
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+
+  test.equal(stringify(data, options), "{a:function abs() { [native code] },b:function abs() { [native code] }}")
 })
 
 tap.test('stringify - multiline strings', (test) => {
@@ -460,8 +474,8 @@ line1`
 tap.test('stringify - recordset', (test) => {
   test.plan(1)
   const data = {
-    a: [{ name: 'Al', age: 2}, {name: 'Bob', age: 3}, {name: 'Carl', age: 4}],
-    c: {name: 'Dan', age: 5, d: {name: 'El', age: 6}}
+    a: [{ name: 'Al', age: 2 }, { name: 'Bob', age: 3 }, { name: 'Carl', age: 4 }],
+    c: { name: 'Dan', age: 5, d: { name: 'El', age: 6 } }
   }
   const result = `{
   a:[
@@ -488,4 +502,47 @@ tap.test('stringify - recordset', (test) => {
   }
 }`
   test.equal(stringify(data), result)
+})
+
+tap.test('stringify - discard', (test) => {
+  test.plan(1)
+  test.equal(stringify({ a: null }, { discard: true }), "{\n}")
+})
+
+tap.test('stringify - null', (test) => {
+  test.plan(1)
+  test.equal(stringify(null), "null")
+})
+
+tap.test('stringify - undefined', (test) => {
+  test.plan(1)
+  test.equal(stringify(undefined), "undefined")
+})
+
+tap.test('stringify - minimal', (test) => {
+  test.plan(1)
+  test.equal(stringify({ a: 1 }), "{\n  a:1\n}")
+})
+
+tap.test('stringify - Symbol', (test) => {
+  test.plan(1)
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  test.equal(stringify({ empty: Symbol(), a: Symbol('a') }, options), 
+    "{empty:Symbol(\"\"),a:Symbol(\"a\")}")
+})
+
+tap.skip('stringify - Map', (test) => {
+  test.plan(1)
+  test.equal(stringify({ empty: new Map(), a: new Map([['a', 1], ['b', 2]]) }, { compress: true }), 
+    "{empty:new Map(),a:new Map([['a',1],['b',2]])}")
+})
+
+tap.skip('stringify - Set', (test) => {
+  test.plan(1)
+  test.equal(stringify({ empty: new Set(), a: new Set([1,2,3,4,5]) }, { compress: true }), 
+    "{empty:new Set(),a: new Set([1,2,3,4,5])}")
 })
