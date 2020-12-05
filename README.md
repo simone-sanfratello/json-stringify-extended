@@ -11,6 +11,7 @@ JSON.stringify any data types
 ## Purpose
 
 - stringify primitive js types properly without limitation
+- manipulate objects while serializing
 - get control on circular reference
 - use custom types not yet defined (e.g. enums)
 - avoid quotes if not needed
@@ -27,48 +28,68 @@ npm i json-stringify-extended
 const stringify = require('json-stringify-extended')
 
 const data = {
- a: 'basic set, default options',
- b: 1,
- c: true,
- d: function (a, b) { console.log(a + b) },
- e: {a: 0, b: 0.1, c: -2},
- f: ['a', 'b', 'c'],
- g: new Date('2017-01-01'),
- h: /a|b/,
- i: null,
- j: Infinity,
- k: NaN,
- l: undefined,
- m: stringify.deferred('my.enum.VALUE'),
- n: Buffer.from('7468697320697320612074c3a97374', 'hex')
+  a: 'basic set, default options',
+  b: 1,
+  c: true,
+  d: function (a, b) { console.log(a + b) },
+  e: {a: 0, b: 0.1, c: -2},
+  f: ['a', 'b', 'c'],
+  g: new Date('2017-01-01'),
+  h: /a|b/,
+  i: null,
+  j: Infinity,
+  k: NaN,
+  l: undefined,
+  m: stringify.deferred('my.enum.VALUE'),
+  n: Buffer.from('7468697320697320612074c3a97374', 'hex'),
+  o: Symbol('cross'),
+  p: new Map([[1, 'Rico'], [2, 'Mimi']]),
+  q: new Set(['cuori', 'quadri', 'picche', 'fiori'])
 }
 
 console.log(stringify(data))
 
 // output
 {
- a:"basic set, default options",
- b:1,
- c:true,
- d:function (a, b) { console.log(a + b) },
- e:{
-   a:0,
-   b:0.1,
-   c:-2
- },
- f:[
-   "a",
-   "b",
-   "c"
- ],
- g:new Date("2017-01-01T00:00:00.000Z"),
- h:/a|b/,
- i:null,
- j:Infinity,
- k:NaN,
- l:undefined,
- m:my.enum.VALUE,
- n:Buffer.from("dGhpcyBpcyBhIHTDqXN0")
+  a:"basic set, default options",
+  b:1,
+  c:true,
+  d:function (a, b) { console.log(a + b) },
+  e:{
+    a:0,
+    b:0.1,
+    c:-2
+  },
+  f:[
+    "a",
+    "b",
+    "c"
+  ],
+  g:new Date("2017-01-01T00:00:00.000Z"),
+  h:/a|b/,
+  i:null,
+  j:Infinity,
+  k:NaN,
+  l:undefined,
+  m:my.enum.VALUE,
+  n:Buffer.from("dGhpcyBpcyBhIHTDqXN0"),
+  o:Symbol("cross"),
+  p:new Map([
+    [
+      1,
+      "Rico"
+    ],
+    [
+      2,
+      "Mimi"
+    ]
+  ]),
+  q:new Set([
+    "cuori",
+    "quadri",
+    "picche",
+    "fiori"
+  ])
 }
 
 ```
@@ -121,31 +142,6 @@ console.log (stringify (data, stringify.options.compact))
 // output
 {a:'string',b:false,c:[0,1,2]}
 ````
-
-##### options.safe
-Type: `boolean`  
-Default: `false`
-
-Works in safe mode, so it will not throws exception for circularity.
-
-##### options.endline
-Type: `string`  
-Default: `\n`
-
-Endline string should contain spacing chars as `\n` or `\r\n`. Set to empty string `''` for one line output.
-
-##### options.spacing
-Type: `string`  
-Default: `  ` (two spaces)
-
-Indentation string should contains only spacing chars as `\t` or spaces ` `.
-
-##### options.compress
-Type: `boolean`  
-Default: `false`
-
-Compress data for ``function`` and ``Date``.
-Note: in version < `2.0.0` also discard ``null`` and ``undefined`` values.
 
 ##### options.filter
 Type: `function(key:string, value:string) return boolean`  
@@ -228,6 +224,31 @@ console.log(stringify(data, options))
 }
 ````
 
+##### options.safe
+Type: `boolean`  
+Default: `false`
+
+Works in safe mode, so it will not throws exception for circularity.
+
+##### options.endline
+Type: `string`  
+Default: `\n`
+
+Endline string should contain spacing chars as `\n` or `\r\n`. Set to empty string `''` for one line output.
+
+##### options.spacing
+Type: `string`  
+Default: `  ` (two spaces)
+
+Indentation string should contains only spacing chars as `\t` or spaces ` `.
+
+##### options.compress
+Type: `boolean`  
+Default: `false`
+
+Compress data for ``function`` and ``Date``.
+Note: in version < `2.0.0` also discard ``null`` and ``undefined`` values.
+
 ##### options.keyQuote
 Type: `string`  
 Default: `null`
@@ -256,8 +277,11 @@ Discard values `null` and ``undefined``.
 
 ## Changelog
 
+#### v. 2.2.0
+- support `Map` and `Set` types
+
 #### v. 2.1.0
-- support `Symbol` types
+- support `Symbol` type
 - **100%** code coverage
 - drop `node` < `10`
 

@@ -142,20 +142,37 @@ const stringify = function (data, options) {
       }
       return 'new Date(' + options.valueQuote + date.toISOString() + options.valueQuote + ')'
     },
-    symbol: function (symbol) {
-      return 'Symbol(' + options.valueQuote + symbol.toString().match(SYMBOL_STRIP)[1] + options.valueQuote + ')'
-    },
     regexp: function (obj) {
       return obj.toString()
     },
     buffer: function (obj) {
       return 'Buffer.from(' + options.valueQuote + obj.toString('base64') + options.valueQuote + ')'
     },
-    object: function (obj, deep, path) {
-      _counter.object++
-      if (!path) {
-        path = '{}'
+    symbol: function (symbol) {
+      return 'Symbol(' + options.valueQuote + symbol.toString().match(SYMBOL_STRIP)[1] + options.valueQuote + ')'
+    },
+    map: function (map) {
+      const entries = []
+      for (const entry of map) {
+        entries.push(entry)
       }
+      if (entries.length < 1) {
+        return 'new Map()'
+      }
+      return `new Map(${_serialize.array(entries, 2)})`
+    },
+    set: function (set) {
+      const entries = []
+      for (const entry of set) {
+        entries.push(entry)
+      }
+      if (entries.length < 1) {
+        return 'new Set()'
+      }
+      return `new Set(${_serialize.array(entries, 2)})`
+    },
+    object: function (obj, deep, path = '{}') {
+      _counter.object++
 
       const _spacing0 = spacing(deep)
       const _spacing1 = _spacing0 + options.spacing
@@ -182,12 +199,8 @@ const stringify = function (data, options) {
       }
       return '{' + _out.join(',') + options.endline + _spacing0 + '}'
     },
-    array: function (array, deep, path) {
+    array: function (array, deep, path = '[]') {
       _counter.array++
-      if (!path) {
-        path = '[]'
-      }
-
       if (circularity(array, path)) {
         return '[Circularity]'
       }
@@ -219,9 +232,7 @@ const stringify = function (data, options) {
     return quote + replace(value, quote, '\\' + quote) + quote
   }
 
-  function item (key, value, deep, path) {
-    if (!deep) deep = 1
-
+  function item (key, value, deep = 1, path) {
     if ((options.discard) && (value === undefined || value === null)) {
       return null
     }
@@ -244,6 +255,10 @@ const stringify = function (data, options) {
         _type = 'regexp'
       } else if (value instanceof Buffer) {
         _type = 'buffer'
+      } else if (value instanceof Map) {
+        _type = 'map'
+      } else if (value instanceof Set) {
+        _type = 'set'
       } else if (value instanceof stringify._deferred) {
         _type = 'deferred'
       } else if (value === null) {

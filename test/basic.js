@@ -535,14 +535,24 @@ tap.test('stringify - Symbol', (test) => {
     "{empty:Symbol(\"\"),a:Symbol(\"a\")}")
 })
 
-tap.skip('stringify - Map', (test) => {
+tap.test('stringify - Map', (test) => {
   test.plan(1)
-  test.equal(stringify({ empty: new Map(), a: new Map([['a', 1], ['b', 2]]) }, { compress: true }), 
-    "{empty:new Map(),a:new Map([['a',1],['b',2]])}")
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  test.equal(stringify({ empty: new Map(), a: new Map([['a', 1], ['b', 2], [3, 4]]) }, options), 
+    '{empty:new Map(),a:new Map([["a",1],["b",2],[3,4]])}')
 })
 
-tap.skip('stringify - Set', (test) => {
+tap.test('stringify - Set', (test) => {
   test.plan(1)
-  test.equal(stringify({ empty: new Set(), a: new Set([1,2,3,4,5]) }, { compress: true }), 
-    "{empty:new Set(),a: new Set([1,2,3,4,5])}")
+  const options = {
+    compress: true,
+    spacing: '',
+    endline: ''
+  }
+  test.equal(stringify({ empty: new Set(), a: new Set([1,2,3,4,5]) }, options), 
+    "{empty:new Set(),a:new Set([1,2,3,4,5])}")
 })
