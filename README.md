@@ -106,6 +106,8 @@ console.log(stringify(data))
 * ``RegExp``
 * ``Buffer``
 * ``Symbol``
+* ``Map``
+* ``Set``
 * ``null``
 * ``Infinity``
 * ``NaN``
